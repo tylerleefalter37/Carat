@@ -120,6 +120,12 @@
           <span class="hidden sm:inline">Guild Manual</span>
         </button>
 
+        <!-- Global Bourse Hub / Flight Charter Button -->
+        <button id="btn-open-hubs" title="Book flight charter to global gemstone bourses" class="bg-soot hover:bg-slateDark px-2.5 py-1 rounded border border-slateBorder flex flex-col items-end transition active:scale-95">
+          <span class="text-[9px] uppercase tracking-wider text-boneMuted">Bourse Hub ✈</span>
+          <span id="header-hub" class="font-bold text-bonePaper text-xs">Antwerp HQ</span>
+        </button>
+
         <div class="bg-soot px-2.5 py-1 rounded border border-slateBorder flex flex-col items-end">
           <span class="text-[9px] uppercase tracking-wider text-boneMuted">Liquid Capital</span>
           <span id="header-capital" class="font-bold text-bonePaper text-sm md:text-base">$50,000</span>
@@ -498,8 +504,21 @@
         </div>
       </div>
 
-      <!-- Vault Tray & Selected Stone Panel -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <!-- Studio Mode Sub-Navigation Strip -->
+      <div class="flex items-center gap-2 border-b border-slateBorder pb-2 font-mono text-xs overflow-x-auto">
+        <button id="tab-sub-vault" class="studio-subtab active px-3 py-1 rounded bg-bonePaper text-soot font-bold transition whitespace-nowrap">
+          💎 Vault Inventory Tray
+        </button>
+        <button id="tab-sub-cleft" class="studio-subtab px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper transition whitespace-nowrap">
+          🔨 The "Cleft" Rough Bench
+        </button>
+        <button id="tab-sub-mount" class="studio-subtab px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper transition whitespace-nowrap">
+          👑 Haute Joaillerie Mounting
+        </button>
+      </div>
+
+      <!-- PANE 1: VAULT INVENTORY TRAY & STANDARD SERVICES -->
+      <div id="pane-studio-vault" class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         <!-- Left: Inventory Trays (7 Cols) -->
         <div class="lg:col-span-7 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-3 min-h-[420px] flex flex-col justify-between">
@@ -608,6 +627,204 @@
         </div>
 
       </div>
+
+      <!-- PANE 2: THE "CLEFT" ROUGH CLEAVING BENCH -->
+      <div id="pane-studio-cleft" class="space-y-4 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- Left: Cleft Canvas & Octahedral Crystal (7 Cols) -->
+          <div class="lg:col-span-7 bg-charcoal p-4 rounded-lg border border-slateBorder flex flex-col items-center justify-between shadow-md">
+            <div class="w-full flex justify-between items-center text-xs font-mono border-b border-slateBorder pb-2 mb-2">
+              <span class="text-boneMuted">Crystalline Plane: <strong class="text-boneLight">{111} Octahedral Cleavage</strong></span>
+              <span id="cleft-status-pill" class="px-2 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted">Awaiting Strike</span>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="relative w-full aspect-square max-w-[400px] flex items-center justify-center bg-[#0d0d0d] rounded border border-slateBorder overflow-hidden shadow-inner">
+              <canvas id="cleftCanvas" class="w-full h-full block"></canvas>
+              <!-- Alignment Reticle Guide -->
+              <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30">
+                <div class="w-48 h-48 border border-dashed border-bonePaper rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Cleave Blade Angle Slider -->
+            <div class="w-full mt-3 bg-soot p-3 rounded border border-slateBorder space-y-1 font-mono text-xs">
+              <div class="flex justify-between text-boneMuted">
+                <span>Cleaving Blade Alignment:</span>
+                <span id="lbl-cleft-angle" class="font-bold text-boneLight">45° Grain</span>
+              </div>
+              <input type="range" id="slider-cleft-angle" min="0" max="180" value="45" class="w-full">
+            </div>
+          </div>
+
+          <!-- Right: Rough Sourcing & Mallet Tension Strike (5 Cols) -->
+          <div class="lg:col-span-5 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-4 shadow-md flex flex-col justify-between">
+            <div class="space-y-3 font-mono text-xs">
+              <div class="border-b border-slateBorder pb-2">
+                <h3 class="font-display font-bold text-sm text-bonePaper uppercase">Octahedral Rough Crystal</h3>
+                <p class="font-serif italic text-boneMuted text-[11px]">Split raw crystal along its natural {111} grain to yield two mirror-clean gems.</p>
+              </div>
+
+              <!-- Rough Parcel Selector / Sight Purchase -->
+              <div class="space-y-1.5">
+                <label class="text-[10px] uppercase text-boneMuted tracking-wider block">Acquire Rough Parcel:</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <button id="btn-buy-rough-small" class="p-2 bg-soot hover:bg-slateDark border border-slateBorder text-left rounded text-[11px]">
+                    <div class="font-bold text-bonePaper">3.20 ct Rough</div>
+                    <div class="text-boneMuted text-[10px]">$3,400 Sight</div>
+                  </button>
+                  <button id="btn-buy-rough-large" class="p-2 bg-soot hover:bg-slateDark border border-slateBorder text-left rounded text-[11px]">
+                    <div class="font-bold text-bonePaper">5.80 ct Master</div>
+                    <div class="text-boneMuted text-[10px]">$7,600 Sight</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Active Rough Metrics -->
+              <div id="cleft-rough-meta" class="p-3 bg-soot rounded border border-slateBorder space-y-1.5">
+                <div class="flex justify-between">
+                  <span class="text-boneMuted">Mounted Crystal:</span>
+                  <span id="cleft-rough-name" class="font-bold text-boneLight">3.20 ct Diamond Octahedron</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-boneMuted">True {111} Cleavage Angle:</span>
+                  <span id="cleft-target-angle" class="text-bonePaper font-bold">55° North</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-boneMuted">Projected Split Yield:</span>
+                  <span class="text-boneLight">2 Clean Cut Gems (~72%)</span>
+                </div>
+              </div>
+
+              <!-- Mallet Strike Kinetic Tension Bar -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-boneMuted text-[11px]">
+                  <span>Mallet Strike Force (Target 65–78%):</span>
+                  <span id="lbl-strike-tension" class="font-bold text-bonePaper">0%</span>
+                </div>
+                <div class="w-full bg-soot h-3 rounded border border-slateBorder overflow-hidden relative">
+                  <!-- Green Zone Indicator -->
+                  <div class="absolute left-[65%] w-[13%] h-full bg-slateBorder/80 border-x border-bonePaper/60"></div>
+                  <div id="bar-strike-tension" class="h-full bg-bonePaper transition-all duration-75" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Strike Log / Outcome Box -->
+              <div id="cleft-log-box" class="p-2.5 bg-soot rounded border border-slateBorder h-20 overflow-y-auto text-[11px] text-boneMuted">
+                <div>Align blade angle and strike wooden mallet when tension reaches the sweet spot.</div>
+              </div>
+            </div>
+
+            <!-- Mallet Action Button -->
+            <button id="btn-strike-mallet" class="w-full py-3 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95 shadow">
+              🔨 Strike Cleaving Mallet
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PANE 3: HAUTE JOAILLERIE MOUNTING STUDIO -->
+      <div id="pane-studio-mount" class="space-y-4 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- Left: Select Vault Stone & Setting Selection (7 Cols) -->
+          <div class="lg:col-span-7 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-4 shadow-md">
+            <div class="border-b border-slateBorder pb-2">
+              <h3 class="font-display font-bold text-sm text-bonePaper uppercase">Place Vendôme Haute Joaillerie Mounting</h3>
+              <p class="font-serif italic text-boneMuted text-[11px]">Transform fine certified stones into finished high-jewelry masterworks (2.5× to 3.5× auction multiplier).</p>
+            </div>
+
+            <!-- Choose Stone Dropdown -->
+            <div class="space-y-1 font-mono text-xs">
+              <label for="mount-gem-select" class="text-boneMuted block text-[10px] uppercase">Select Loose Vault Stone:</label>
+              <select id="mount-gem-select" class="w-full bg-soot border border-slateBorder rounded p-2 text-xs font-mono text-bonePaper focus:outline-none focus:border-boneLight">
+                <option value="">-- Choose Vault Parcel --</option>
+              </select>
+            </div>
+
+            <!-- Mounting Settings Grid -->
+            <div class="space-y-2">
+              <label class="text-[10px] font-mono uppercase text-boneMuted tracking-wider block">Choose Precious Metal Setting:</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs">
+                
+                <div data-mount="solitaire" class="mount-card active p-3 rounded bg-soot border border-bonePaper cursor-pointer transition">
+                  <div class="flex justify-between items-center font-bold text-bonePaper">
+                    <span>Platinum 950 Solitaire</span>
+                    <span class="text-boneLight">$850</span>
+                  </div>
+                  <div class="text-[10px] text-boneMuted mt-1 font-serif italic">Classic 4-prong heavy platinum band. Multiplier: <strong>2.5×</strong></div>
+                </div>
+
+                <div data-mount="art_deco" class="mount-card p-3 rounded bg-soot border border-slateBorder cursor-pointer transition hover:border-boneLight">
+                  <div class="flex justify-between items-center font-bold text-bonePaper">
+                    <span>Art Deco 3-Stone Baguette</span>
+                    <span class="text-boneLight">$1,650</span>
+                  </div>
+                  <div class="text-[10px] text-boneMuted mt-1 font-serif italic">Flanked by two tapered diamond baguettes. Multiplier: <strong>3.0×</strong></div>
+                </div>
+
+                <div data-mount="halo_pendant" class="mount-card p-3 rounded bg-soot border border-slateBorder cursor-pointer transition hover:border-boneLight">
+                  <div class="flex justify-between items-center font-bold text-bonePaper">
+                    <span>Belle Époque Halo Pendant</span>
+                    <span class="text-boneLight">$1,400</span>
+                  </div>
+                  <div class="text-[10px] text-boneMuted mt-1 font-serif italic">Scalloped 24-diamond micro-pavé halo. Multiplier: <strong>2.8×</strong></div>
+                </div>
+
+                <div data-mount="tiara" class="mount-card p-3 rounded bg-soot border border-slateBorder cursor-pointer transition hover:border-boneLight">
+                  <div class="flex justify-between items-center font-bold text-bonePaper">
+                    <span>Royal Vendôme Tiara / Brooch</span>
+                    <span class="text-boneLight">$3,800</span>
+                  </div>
+                  <div class="text-[10px] text-boneMuted mt-1 font-serif italic">Museum scrollwork in platinum. Multiplier: <strong>3.5×</strong></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Finished Piece Projection & Goldsmith Commission (5 Cols) -->
+          <div class="lg:col-span-5 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-4 shadow-md flex flex-col justify-between">
+            <div class="space-y-3 font-mono text-xs">
+              <div class="border-b border-slateBorder pb-2">
+                <h3 class="font-display font-bold text-sm text-bonePaper uppercase">Masterpiece Projection</h3>
+                <span class="text-[10px] text-boneMuted">Fine Jewelry Atelier Dossier</span>
+              </div>
+
+              <div id="mount-preview-box" class="p-3 bg-soot rounded border border-slateBorder space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-boneMuted">Selected Center Gem:</span>
+                  <span id="mount-center-name" class="font-bold text-bonePaper">1.84 ct Round Brilliant</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-boneMuted">Setting Commission:</span>
+                  <span id="mount-setting-name" class="text-boneLight">Platinum 950 Solitaire ($850)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-boneMuted">Loose Wholesale Baseline:</span>
+                  <span id="mount-loose-val" class="text-boneMuted">$14,200</span>
+                </div>
+                <div class="flex justify-between pt-1 border-t border-slateBorder/60">
+                  <span class="text-boneMuted">Projected Finished Retail:</span>
+                  <span id="mount-finished-val" class="font-bold text-bonePaper text-base">$35,500</span>
+                </div>
+              </div>
+
+              <p class="font-serif italic text-boneMuted text-[11px] leading-relaxed">
+                Finished haute joaillerie pieces qualify for premier lots on the Geneva & 5th Avenue live gavel auction block, receiving high opening paddles from international collectors.
+              </p>
+            </div>
+
+            <button id="btn-commission-mounting" class="w-full py-3 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95 shadow">
+              👑 Commission Atelier Mounting
+            </button>
+          </div>
+
+        </div>
+      </div>
+
     </section>
 
     <!-- VIEW 4: B2B COMMISSIONS, SHOWROOM & MEMO BOARD -->
@@ -837,6 +1054,48 @@
           Acknowledge
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL BOURSE HUBS FLIGHT CHARTER MODAL -->
+  <div id="modal-hubs-backdrop" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 md:p-6 hidden">
+    <div class="bg-charcoal border border-slateBorder max-w-3xl w-full rounded-lg shadow-2xl flex flex-col overflow-hidden">
+      
+      <!-- Top Bar -->
+      <div class="px-4 py-3 border-b border-slateBorder bg-soot flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-6 h-6 rounded border border-slateBorder bg-charcoal flex items-center justify-center font-display text-[10px] text-boneLight">
+            ✈
+          </span>
+          <div>
+            <h2 class="font-display font-bold text-xs md:text-sm uppercase tracking-wider text-bonePaper">
+              Global Bourse Hubs & Flight Network
+            </h2>
+            <p class="font-mono text-[9px] text-boneMuted">
+              Charter private courier flights to international trade capitals & regional mines
+            </p>
+          </div>
+        </div>
+        <button id="btn-close-hubs" class="w-7 h-7 rounded border border-slateBorder bg-charcoal hover:bg-slateDark text-boneMuted hover:text-bonePaper flex items-center justify-center font-mono text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Hubs List -->
+      <div class="p-4 md:p-6 space-y-3 max-h-[70vh] overflow-y-auto font-mono text-xs">
+        <div id="hubs-container" class="space-y-3">
+          <!-- Dynamically populated hubs -->
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-3 border-t border-slateBorder bg-soot flex items-center justify-between text-[11px] font-mono text-boneMuted">
+        <span>Antwerp Diplomatic Air Registry</span>
+        <button id="btn-hubs-got-it" class="px-4 py-1.5 rounded bg-bonePaper hover:bg-white text-soot font-display font-bold uppercase tracking-wider text-xs transition">
+          Close Registry
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -1314,12 +1573,163 @@
           osc.start(now);
           osc.stop(now + 0.15);
         } catch(e) {}
+      },
+      // Cleft mallet strike (wooden impact crack + crystalline ring)
+      cleaveMallet() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          // Mallet impact
+          const osc1 = this.ctx.createOscillator();
+          const gain1 = this.ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(260, now);
+          osc1.frequency.exponentialRampToValueAtTime(60, now + 0.1);
+          gain1.gain.setValueAtTime(0.28, now);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc1.connect(gain1);
+          gain1.connect(this.ctx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.12);
+
+          // Crystalline cleft ring
+          const osc2 = this.ctx.createOscillator();
+          const gain2 = this.ctx.createGain();
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(3200, now + 0.05);
+          osc2.frequency.exponentialRampToValueAtTime(1800, now + 0.45);
+          gain2.gain.setValueAtTime(0.12, now + 0.05);
+          gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+          osc2.connect(gain2);
+          gain2.connect(this.ctx.destination);
+          osc2.start(now + 0.05);
+          osc2.stop(now + 0.5);
+        } catch(e) {}
+      },
+      // Goldsmith mounting tap & chime
+      mountSetting() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1950, now);
+          osc.frequency.setValueAtTime(2600, now + 0.08);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } catch(e) {}
+      },
+      // Flight charter acoustic whoosh
+      flightCharter() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(120, now);
+          osc.frequency.linearRampToValueAtTime(240, now + 0.25);
+          osc.frequency.linearRampToValueAtTime(80, now + 0.6);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.65);
+        } catch(e) {}
       }
     };
 
     /* =========================================================================
        DATA MODELS & STATE MANAGEMENT
        ========================================================================= */
+    const BOURSE_HUBS = {
+      antwerp: {
+        id: 'antwerp',
+        name: 'Antwerp (Pelikaanstraat HQ)',
+        country: 'Belgium',
+        desc: 'Global Diamond Capital. Master sight-holders, highest trade liquidity, standard GIA rates.',
+        ticketCost: 0,
+        specialty: 'D-Flawless Master White Diamonds & Rough Sights',
+        recutCost: 650
+      },
+      ratnapura: {
+        id: 'ratnapura',
+        name: 'Ratnapura (City of Gems)',
+        country: 'Sri Lanka',
+        desc: 'Alluvial sapphire gravels. Local runners supply untreated Ceylon silk sapphires at 25% discount.',
+        ticketCost: 850,
+        specialty: 'Untreated Ceylon Silk Sapphires & Padparadscha',
+        recutCost: 700
+      },
+      idar_oberstein: {
+        id: 'idar_oberstein',
+        name: 'Idar-Oberstein (Nahe Valley)',
+        country: 'Germany',
+        desc: 'European gem-cutting capital. Master lapidary guilds provide recutting at 50% discount ($325) and max yield.',
+        ticketCost: 650,
+        specialty: 'Master Lapidary Guild Faceting & High Yields',
+        recutCost: 325
+      },
+      mumbai: {
+        id: 'mumbai',
+        name: 'Mumbai (Bharat Bourse)',
+        country: 'India',
+        desc: 'Largest diamond exchange complex on earth. Massive volume of raw octahedral crystals at low dealer margins.',
+        ticketCost: 1100,
+        specialty: 'High-Volume Rough Crystals & Fast Turnover',
+        recutCost: 500
+      },
+      yekaterinburg: {
+        id: 'yekaterinburg',
+        name: 'Yekaterinburg (Ural Mountains)',
+        country: 'Russia',
+        desc: 'Historic Malysheva emerald and chrysoberyl deposits. Primary source of Russian color-change Alexandrite.',
+        ticketCost: 1400,
+        specialty: 'Imperial Ural Russian Alexandrite (High Metamerism)',
+        recutCost: 750
+      }
+    };
+
+    const MOUNT_TYPES = {
+      solitaire: {
+        id: 'solitaire',
+        name: 'Platinum 950 Solitaire Ring',
+        cost: 850,
+        multiplier: 2.5,
+        desc: 'Classic 4-prong heavy platinum setting.'
+      },
+      art_deco: {
+        id: 'art_deco',
+        name: 'Art Deco 3-Stone Baguette Mount',
+        cost: 1650,
+        multiplier: 3.0,
+        desc: 'Pair of calibrated tapered baguette diamond side-stones.'
+      },
+      halo_pendant: {
+        id: 'halo_pendant',
+        name: 'Belle Époque Micro-Pavé Halo Pendant',
+        cost: 1400,
+        multiplier: 2.8,
+        desc: 'Scalloped halo of 24 brilliant diamond melee in 18k white gold.'
+      },
+      tiara: {
+        id: 'tiara',
+        name: 'Royal Vendôme Tiara / Brooch',
+        cost: 3800,
+        multiplier: 3.5,
+        desc: 'Museum-grade platinum scrollwork reserved for master stones.'
+      }
+    };
+
     const UPGRADES_CONFIG = [
       {
         id: 'scale_mk2',
@@ -1439,6 +1849,9 @@
       capital: 50000,
       reputation: 120,
       day: 1,
+      currentHub: 'antwerp',
+      activeMountChoice: 'solitaire',
+      activeRough: null,
       vault: [],
       upgrades: JSON.parse(JSON.stringify(UPGRADES_CONFIG)),
       dockets: [...DEFAULT_DOCKETS],
@@ -1454,6 +1867,7 @@
             capital: this.capital,
             reputation: this.reputation,
             day: this.day,
+            currentHub: this.currentHub,
             vault: this.vault,
             upgrades: this.upgrades,
             logs: this.logs
@@ -1469,12 +1883,12 @@
           if (raw) {
             const data = JSON.parse(raw);
             this.capital = data.capital || 50000;
-            // Upgrade legacy starting bankroll to $50,000
             if (this.capital === 18500 || (this.capital < 50000 && (!data.day || data.day <= 1))) {
               this.capital = 50000;
             }
             this.reputation = data.reputation || 120;
             this.day = data.day || 1;
+            this.currentHub = data.currentHub || 'antwerp';
             this.vault = data.vault || [];
             if (data.upgrades) this.upgrades = data.upgrades;
             this.logs = data.logs || [];
@@ -1492,23 +1906,36 @@
       diamondColors: ['D', 'E', 'F', 'G', 'H', 'I', 'J'],
 
       createRandomGem() {
-        const rand = Math.random();
+        const hub = Game.currentHub || 'antwerp';
         let type, variety;
-        if (rand < 0.45) {
-          type = 'Diamond';
+
+        // Biased species generation based on active Bourse Hub!
+        if (hub === 'ratnapura') {
+          // Sri Lanka: High sapphire focus
+          type = Math.random() < 0.75 ? 'Sapphire' : (Math.random() < 0.5 ? 'Diamond' : 'Alexandrite');
+        } else if (hub === 'yekaterinburg') {
+          // Russia: High Alexandrite focus
+          type = Math.random() < 0.65 ? 'Alexandrite' : (Math.random() < 0.6 ? 'Diamond' : 'Sapphire');
+        } else {
+          // Standard / Antwerp / Mumbai / Idar
+          const rand = Math.random();
+          if (rand < 0.50) type = 'Diamond';
+          else if (rand < 0.82) type = 'Sapphire';
+          else type = 'Alexandrite';
+        }
+
+        if (type === 'Diamond') {
           const rColor = Math.random();
           if (rColor < 0.70) variety = 'Natural Diamond (White)';
           else if (rColor < 0.82) variety = 'Fancy Pink Diamond';
           else if (rColor < 0.92) variety = 'Fancy Canary Diamond';
           else variety = 'Fancy Black Diamond';
-        } else if (rand < 0.80) {
-          type = 'Sapphire';
+        } else if (type === 'Sapphire') {
           const rSap = Math.random();
           if (rSap < 0.55) variety = 'Royal Blue Sapphire';
-          else if (rSap < 0.85) variety = 'Cornflower Sapphire';
+          else if (rSap < 0.82) variety = 'Cornflower Sapphire';
           else variety = 'Padparadscha Sapphire';
         } else {
-          type = 'Alexandrite';
           variety = 'Natural Russian Alexandrite';
         }
 
@@ -1525,10 +1952,11 @@
         let fluorescence = 'None';
 
         if (type === 'Alexandrite') {
-          colorChangePct = Math.floor(65 + Math.random() * 32); // 65% to 97%
+          colorChangePct = hub === 'yekaterinburg' ? Math.floor(82 + Math.random() * 16) : Math.floor(65 + Math.random() * 32);
           treatment = 'Natural Untreated';
         } else if (type === 'Sapphire') {
-          treatment = Math.random() < 0.35 ? 'Natural Unheated' : 'Standard Heat Treated';
+          const unheatedChance = hub === 'ratnapura' ? 0.65 : 0.35;
+          treatment = Math.random() < unheatedChance ? 'Natural Unheated' : 'Standard Heat Treated';
         } else {
           const fluoChance = Math.random();
           if (fluoChance < 0.7) fluorescence = 'None';
@@ -1536,7 +1964,7 @@
           else fluorescence = 'Strong Medium Blue';
         }
 
-        // Procedural Inclusions (coordinates inside stone)
+        // Procedural Inclusions
         const inclusions = [];
         let numInclusions = 0;
         if (clarity === 'VVS1') numInclusions = 1;
@@ -1549,12 +1977,12 @@
 
         for (let i = 0; i < numInclusions; i++) {
           const angle = Math.random() * Math.PI * 2;
-          const dist = Math.random() * 0.72; // inside normalized circle
+          const dist = Math.random() * 0.72;
           inclusions.push({
             type: Math.random() < 0.65 ? 'pinpoint' : (Math.random() < 0.5 ? 'feather' : 'crystal'),
             x: Math.cos(angle) * dist,
             y: Math.sin(angle) * dist,
-            depth: Math.floor(Math.random() * 100), // focal depth
+            depth: Math.floor(Math.random() * 100),
             size: 1 + Math.random() * 3.5,
             angle: Math.random() * Math.PI
           });
@@ -1565,7 +1993,7 @@
         const depthPct = parseFloat((60 + Math.random() * 3.5).toFixed(1));
         const cutQuality = depthPct > 60 && depthPct < 62.5 ? 'Ideal' : (depthPct < 64 ? 'Excellent' : 'Very Good');
 
-        // Wholesale Benchmark Calculation (Rapaport-style baseline)
+        // Wholesale Benchmark Calculation
         let basePerCarat = 2200;
         if (type === 'Diamond') {
           if (variety === 'Natural Diamond (White)') {
@@ -1582,7 +2010,10 @@
           basePerCarat = 5500 * (colorChangePct / 70);
         }
 
-        // Exponential weight multiplier (1ct, 2ct, 3ct cliff)
+        // Regional Hub Discount
+        if (hub === 'ratnapura' && type === 'Sapphire') basePerCarat *= 0.80;
+        if (hub === 'mumbai' && type === 'Diamond') basePerCarat *= 0.88;
+
         const weightMultiplier = Math.pow(carat, 1.35);
         const wholesaleValue = Math.round((basePerCarat * carat * weightMultiplier) / 50) * 50;
 
@@ -1604,7 +2035,20 @@
           certified: false,
           certNumber: null,
           costBasis: 0,
-          wholesaleValue
+          wholesaleValue,
+          isMounted: false,
+          mountType: null
+        };
+      },
+
+      createRoughOctahedron(caratWeight = 3.20) {
+        const targetAngle = Math.floor(40 + Math.random() * 60); // 40° to 100°
+        return {
+          id: 'ROUGH-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+          carat: caratWeight,
+          variety: 'Octahedral Rough Diamond',
+          targetAngle,
+          cost: Math.round(caratWeight * 1150)
         };
       }
     };
@@ -2073,6 +2517,232 @@
     };
 
     /* =========================================================================
+       THE "CLEFT" ROUGH CLEAVING CANVAS & CONTROLLER
+       ========================================================================= */
+    const CleftBench = {
+      canvas: null,
+      ctx: null,
+      bladeAngle: 45,
+      tension: 0,
+      tensionTimer: null,
+
+      init() {
+        this.canvas = document.getElementById('cleftCanvas');
+        if (this.canvas) {
+          this.ctx = this.canvas.getContext('2d');
+          this.resize();
+        }
+
+        const angleSlider = document.getElementById('slider-cleft-angle');
+        if (angleSlider) {
+          angleSlider.addEventListener('input', (e) => {
+            this.bladeAngle = parseInt(e.target.value);
+            document.getElementById('lbl-cleft-angle').textContent = `${this.bladeAngle}° Grain`;
+            this.draw();
+          });
+        }
+
+        // Tension bar oscillation animation loop
+        let tensionDir = 1;
+        setInterval(() => {
+          this.tension += tensionDir * 4;
+          if (this.tension >= 100) { this.tension = 100; tensionDir = -1; }
+          else if (this.tension <= 0) { this.tension = 0; tensionDir = 1; }
+
+          const bar = document.getElementById('bar-strike-tension');
+          const lbl = document.getElementById('lbl-strike-tension');
+          if (bar) bar.style.width = `${this.tension}%`;
+          if (lbl) lbl.textContent = `${this.tension}%`;
+        }, 35);
+
+        // Mount default rough if empty
+        if (!Game.activeRough) {
+          Game.activeRough = GemFactory.createRoughOctahedron(3.20);
+        }
+        this.updateRoughUI();
+      },
+
+      resize() {
+        if (!this.canvas) return;
+        const rect = this.canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        this.ctx.resetTransform?.();
+        this.ctx.scale(dpr, dpr);
+        this.draw();
+      },
+
+      updateRoughUI() {
+        const rough = Game.activeRough;
+        if (!rough) return;
+        document.getElementById('cleft-rough-name').textContent = `${rough.carat.toFixed(2)} ct Diamond Octahedron`;
+        document.getElementById('cleft-target-angle').textContent = `${rough.targetAngle}° Octahedral {111}`;
+        this.draw();
+      },
+
+      draw() {
+        if (!this.canvas || !this.ctx || !Game.activeRough) return;
+        const width = this.canvas.parentElement.clientWidth;
+        const height = this.canvas.parentElement.clientHeight;
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, width, height);
+
+        const cx = width / 2;
+        const cy = height / 2;
+        const r = Math.min(width, height) * 0.35;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        // Draw Octahedral Rough Crystal Outline (Two Pyramids Base-to-Base)
+        ctx.fillStyle = '#1c1c1c';
+        ctx.strokeStyle = '#f7f6f2';
+        ctx.lineWidth = 1.8;
+
+        // Top pyramid
+        ctx.beginPath();
+        ctx.moveTo(0, -r);
+        ctx.lineTo(r * 0.85, -r * 0.1);
+        ctx.lineTo(0, r * 0.15);
+        ctx.lineTo(-r * 0.85, -r * 0.1);
+        ctx.closePath();
+        ctx.fillStyle = '#2b2b2b';
+        ctx.fill();
+        ctx.stroke();
+
+        // Bottom pyramid
+        ctx.beginPath();
+        ctx.moveTo(0, r * 0.15);
+        ctx.lineTo(r * 0.85, -r * 0.1);
+        ctx.lineTo(0, r);
+        ctx.lineTo(-r * 0.85, -r * 0.1);
+        ctx.closePath();
+        ctx.fillStyle = '#171717';
+        ctx.fill();
+        ctx.stroke();
+
+        // Trigons (Natural triangular growth marks on diamond faces)
+        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+        ctx.lineWidth = 0.8;
+        const drawTrigon = (tx, ty, size) => {
+          ctx.beginPath();
+          ctx.moveTo(tx, ty - size);
+          ctx.lineTo(tx + size, ty + size);
+          ctx.lineTo(tx - size, ty + size);
+          ctx.closePath();
+          ctx.stroke();
+        };
+        drawTrigon(0, -r * 0.45, 9);
+        drawTrigon(-r * 0.35, -r * 0.2, 7);
+        drawTrigon(r * 0.35, -r * 0.2, 7);
+        drawTrigon(0, r * 0.5, 8);
+
+        // True Cleavage Grain Line Indicator (faint crystalline striation)
+        const targetRad = (Game.activeRough.targetAngle * Math.PI) / 180;
+        ctx.strokeStyle = 'rgba(247, 246, 242, 0.3)';
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(targetRad) * -r * 1.1, Math.sin(targetRad) * -r * 1.1);
+        ctx.lineTo(Math.cos(targetRad) * r * 1.1, Math.sin(targetRad) * r * 1.1);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Player's Cleaving Blade Overlay (Solid Guided Line)
+        const bladeRad = (this.bladeAngle * Math.PI) / 180;
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(bladeRad) * -r * 1.25, Math.sin(bladeRad) * -r * 1.25);
+        ctx.lineTo(Math.cos(bladeRad) * r * 1.25, Math.sin(bladeRad) * r * 1.25);
+        ctx.stroke();
+
+        // Wedge hammer marker at edge
+        ctx.fillStyle = '#f7f6f2';
+        ctx.beginPath();
+        ctx.arc(Math.cos(bladeRad) * -r * 1.25, Math.sin(bladeRad) * -r * 1.25, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      },
+
+      executeStrike() {
+        const rough = Game.activeRough;
+        if (!rough) return;
+
+        SoundFX.cleaveMallet();
+
+        const angleDiff = Math.abs(this.bladeAngle - rough.targetAngle);
+        const inGreenZone = this.tension >= 65 && this.tension <= 80;
+        const logBox = document.getElementById('cleft-log-box');
+        const pill = document.getElementById('cleft-status-pill');
+
+        if (angleDiff <= 5 && inGreenZone) {
+          // PERFECT CLEFT! Splits into two clean high-grade stones
+          const gem1Carat = parseFloat((rough.carat * 0.52).toFixed(2));
+          const gem2Carat = parseFloat((rough.carat * 0.32).toFixed(2));
+
+          const gem1 = GemFactory.createRandomGem();
+          gem1.carat = gem1Carat;
+          gem1.shape = 'Round';
+          gem1.clarity = 'VVS1';
+          gem1.cut = 'Ideal';
+          gem1.wholesaleValue = Math.round(gem1Carat * 7200);
+
+          const gem2 = GemFactory.createRandomGem();
+          gem2.carat = gem2Carat;
+          gem2.shape = 'Pear';
+          gem2.clarity = 'VS1';
+          gem2.cut = 'Ideal';
+          gem2.wholesaleValue = Math.round(gem2Carat * 5400);
+
+          Game.vault.push(gem1, gem2);
+          Game.reputation += 45;
+
+          pill.textContent = 'MASTER CLEFT ✓';
+          pill.className = 'px-2 py-0.5 rounded bg-bonePaper text-soot font-bold';
+          logBox.innerHTML = `<div class="text-bonePaper font-bold">[PERFECT CLEFT!] Mirror cleavage plane! Yielded 2 master stones: ${gem1.carat}ct Round (VVS1, $${gem1.wholesaleValue.toLocaleString()}) + ${gem2.carat}ct Pear (VS1, $${gem2.wholesaleValue.toLocaleString()})!</div>`;
+          UI.showModal("Master Cleave Success!", `The diamond split flawlessly along the {111} plane!\n\n• Primary: ${gem1.carat} ct Round Brilliant (VVS1)\n• Secondary: ${gem2.carat} ct Pear Cut (VS1)\n\nBoth stones safely deposited to your Vault tray!`);
+        } else if (angleDiff <= 12) {
+          // ACCEPTABLE CLEFT with slight strain feathers
+          const gem1Carat = parseFloat((rough.carat * 0.44).toFixed(2));
+          const gem1 = GemFactory.createRandomGem();
+          gem1.carat = gem1Carat;
+          gem1.clarity = 'VS2';
+          gem1.wholesaleValue = Math.round(gem1Carat * 4200);
+
+          Game.vault.push(gem1);
+          Game.reputation += 15;
+
+          pill.textContent = 'PARTIAL SPLIT';
+          pill.className = 'px-2 py-0.5 rounded bg-slateDark text-boneLight';
+          logBox.innerHTML = `<div class="text-boneLight">[PARTIAL CLEFT] Minor cleavage strain feathers. Yielded ${gem1.carat}ct ${gem1.shape} ($${gem1.wholesaleValue.toLocaleString()}). Remainder lost to kerf.</div>`;
+          UI.showModal("Partial Cleave", `Cleaved with slight grain deviation. Yielded 1 stone: ${gem1.carat} ct (${gem1.clarity}) added to Vault.`);
+        } else {
+          // SHATTER / OFF-GRAIN FRACTURE
+          const dustCarat = parseFloat((rough.carat * 0.25).toFixed(2));
+          const scrapGem = GemFactory.createRandomGem();
+          scrapGem.carat = dustCarat;
+          scrapGem.clarity = 'I1';
+          scrapGem.wholesaleValue = Math.round(dustCarat * 950);
+          Game.vault.push(scrapGem);
+
+          pill.textContent = 'FRACTURE / LOSS';
+          pill.className = 'px-2 py-0.5 rounded bg-soot text-boneMuted border border-slateBorder';
+          logBox.innerHTML = `<div class="text-boneMuted">[OFF-GRAIN SHATTER] Strike missed true {111} grain. Crystal suffered shock fractures. Salvaged ${dustCarat}ct scrap ($${scrapGem.wholesaleValue.toLocaleString()}).</div>`;
+          UI.showModal("Cleavage Fracture", "Off-grain strike! The crystal suffered shock cleavage fractures. A small 0.8ct scrap was salvaged.");
+        }
+
+        // Spawn a fresh rough crystal
+        Game.activeRough = GemFactory.createRoughOctahedron(parseFloat((2.8 + Math.random() * 3.5).toFixed(2)));
+        this.updateRoughUI();
+        UI.renderVaultGrid('ALL');
+        UI.updateHeaderMetrics();
+      }
+    };
+
+    /* =========================================================================
        UI CONTROLLERS & GAMEPLAY LOGIC
        ========================================================================= */
     const UI = {
@@ -2086,6 +2756,78 @@
             this.switchTab(tabId);
             SoundFX.loupeClick();
           });
+        });
+
+        // Studio Subtabs (Vault vs Cleft vs Mounting)
+        document.getElementById('tab-sub-vault').addEventListener('click', () => this.switchStudioSubtab('vault'));
+        document.getElementById('tab-sub-cleft').addEventListener('click', () => this.switchStudioSubtab('cleft'));
+        document.getElementById('tab-sub-mount').addEventListener('click', () => this.switchStudioSubtab('mount'));
+
+        // Cleft Bench Rough Sights Purchase Buttons
+        document.getElementById('btn-buy-rough-small').addEventListener('click', () => {
+          if (Game.capital < 3400) {
+            this.showModal("Insufficient Liquidity", "3.20 ct Rough Octahedron requires $3,400.");
+            return;
+          }
+          Game.capital -= 3400;
+          Game.activeRough = GemFactory.createRoughOctahedron(3.20);
+          SoundFX.cashStamp();
+          CleftBench.updateRoughUI();
+          this.updateHeaderMetrics();
+          this.showModal("Rough Mounted", "3.20 ct diamond rough crystal placed on cleaving block.");
+        });
+
+        document.getElementById('btn-buy-rough-large').addEventListener('click', () => {
+          if (Game.capital < 7600) {
+            this.showModal("Insufficient Liquidity", "5.80 ct Master Octahedron requires $7,600.");
+            return;
+          }
+          Game.capital -= 7600;
+          Game.activeRough = GemFactory.createRoughOctahedron(5.80);
+          SoundFX.cashStamp();
+          CleftBench.updateRoughUI();
+          this.updateHeaderMetrics();
+          this.showModal("Master Rough Mounted", "5.80 ct master rough crystal clamped into cleaving bench.");
+        });
+
+        document.getElementById('btn-strike-mallet').addEventListener('click', () => {
+          CleftBench.executeStrike();
+        });
+
+        // Haute Joaillerie Mounting Studio Controls
+        document.querySelectorAll('.mount-card').forEach(mc => {
+          mc.addEventListener('click', () => {
+            document.querySelectorAll('.mount-card').forEach(el => el.className = 'mount-card p-3 rounded bg-soot border border-slateBorder cursor-pointer transition hover:border-boneLight');
+            mc.className = 'mount-card active p-3 rounded bg-soot border border-bonePaper cursor-pointer transition';
+            Game.activeMountChoice = mc.getAttribute('data-mount');
+            this.updateMountPreview();
+            SoundFX.loupeClick();
+          });
+        });
+
+        const mountSelect = document.getElementById('mount-gem-select');
+        if (mountSelect) {
+          mountSelect.addEventListener('change', () => {
+            this.updateMountPreview();
+          });
+        }
+
+        document.getElementById('btn-commission-mounting').addEventListener('click', () => {
+          this.executeMountingCommission();
+        });
+
+        // Global Bourse Hubs Modal Handlers
+        const hubsBackdrop = document.getElementById('modal-hubs-backdrop');
+        document.getElementById('btn-open-hubs').addEventListener('click', () => {
+          this.renderHubs();
+          hubsBackdrop.classList.remove('hidden');
+          SoundFX.loupeClick();
+        });
+        document.getElementById('btn-close-hubs').addEventListener('click', () => {
+          hubsBackdrop.classList.add('hidden');
+        });
+        document.getElementById('btn-hubs-got-it').addEventListener('click', () => {
+          hubsBackdrop.classList.add('hidden');
         });
 
         // Focal slider
@@ -2153,6 +2895,7 @@
           if (e.key === 'Escape') {
             document.getElementById('modal-backdrop').classList.add('hidden');
             manualBackdrop.classList.add('hidden');
+            hubsBackdrop.classList.add('hidden');
           }
         });
 
@@ -2370,6 +3113,157 @@
         document.getElementById('modal-close').addEventListener('click', () => {
           document.getElementById('modal-backdrop').classList.add('hidden');
         });
+      },
+
+      switchStudioSubtab(sub) {
+        ['pane-studio-vault', 'pane-studio-cleft', 'pane-studio-mount'].forEach(id => {
+          document.getElementById(id)?.classList.add('hidden');
+        });
+        document.querySelectorAll('.studio-subtab').forEach(b => {
+          b.className = 'studio-subtab px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper transition whitespace-nowrap';
+        });
+
+        if (sub === 'vault') {
+          document.getElementById('pane-studio-vault')?.classList.remove('hidden');
+          document.getElementById('tab-sub-vault').className = 'studio-subtab active px-3 py-1 rounded bg-bonePaper text-soot font-bold transition whitespace-nowrap';
+          this.renderVaultGrid('ALL');
+        } else if (sub === 'cleft') {
+          document.getElementById('pane-studio-cleft')?.classList.remove('hidden');
+          document.getElementById('tab-sub-cleft').className = 'studio-subtab active px-3 py-1 rounded bg-bonePaper text-soot font-bold transition whitespace-nowrap';
+          setTimeout(() => { CleftBench.resize(); }, 40);
+        } else if (sub === 'mount') {
+          document.getElementById('pane-studio-mount')?.classList.remove('hidden');
+          document.getElementById('tab-sub-mount').className = 'studio-subtab active px-3 py-1 rounded bg-bonePaper text-soot font-bold transition whitespace-nowrap';
+          this.refreshMountGemSelect();
+          this.updateMountPreview();
+        }
+        SoundFX.loupeClick();
+      },
+
+      refreshMountGemSelect() {
+        const select = document.getElementById('mount-gem-select');
+        if (!select) return;
+        select.innerHTML = '<option value="">-- Choose Loose Vault Parcel --</option>';
+        Game.vault.forEach(gem => {
+          if (!gem.isMounted) {
+            const opt = document.createElement('option');
+            opt.value = gem.id;
+            opt.textContent = `${gem.carat} ct ${gem.shape} ${gem.variety} (${gem.clarity}) - Rap: $${gem.wholesaleValue.toLocaleString()}`;
+            select.appendChild(opt);
+          }
+        });
+      },
+
+      updateMountPreview() {
+        const select = document.getElementById('mount-gem-select');
+        const gemId = select?.value;
+        const gem = Game.vault.find(g => g.id === gemId);
+        const mount = MOUNT_TYPES[Game.activeMountChoice || 'solitaire'];
+
+        if (!gem) {
+          document.getElementById('mount-center-name').textContent = 'No Stone Selected';
+          document.getElementById('mount-loose-val').textContent = '$0';
+          document.getElementById('mount-finished-val').textContent = '$0';
+          return;
+        }
+
+        const finishedVal = Math.round(gem.wholesaleValue * mount.multiplier);
+        document.getElementById('mount-center-name').textContent = `${gem.carat} ct ${gem.shape} ${gem.variety}`;
+        document.getElementById('mount-setting-name').textContent = `${mount.name} ($${mount.cost.toLocaleString()})`;
+        document.getElementById('mount-loose-val').textContent = `$${gem.wholesaleValue.toLocaleString()}`;
+        document.getElementById('mount-finished-val').textContent = `$${finishedVal.toLocaleString()}`;
+      },
+
+      executeMountingCommission() {
+        const select = document.getElementById('mount-gem-select');
+        const gemId = select?.value;
+        const gem = Game.vault.find(g => g.id === gemId);
+        const mount = MOUNT_TYPES[Game.activeMountChoice || 'solitaire'];
+
+        if (!gem) {
+          this.showModal("No Stone Selected", "Select a loose vault parcel to mount into fine jewelry.");
+          return;
+        }
+        if (Game.capital < mount.cost) {
+          this.showModal("Insufficient Liquidity", `Commissioning this setting requires $${mount.cost.toLocaleString()}.`);
+          return;
+        }
+
+        Game.capital -= mount.cost;
+        gem.isMounted = true;
+        gem.mountType = mount.name;
+        gem.wholesaleValue = Math.round(gem.wholesaleValue * mount.multiplier);
+        gem.variety = `[Mounted] ${gem.variety} (${mount.name})`;
+
+        SoundFX.mountSetting();
+        this.addBlotterLog(`HAUTE JOAILLERIE`, `Set ${gem.carat} ct stone into ${mount.name}.`, -mount.cost);
+        this.showModal("Masterpiece Completed!", `Stone successfully set into ${mount.name}!\n\nFinished Masterpiece Value: $${gem.wholesaleValue.toLocaleString()}!\nReady for top-tier bidding on the Magnificent Jewels auction block.`);
+
+        this.updateHeaderMetrics();
+        this.refreshMountGemSelect();
+        this.updateMountPreview();
+        this.renderVaultGrid('ALL');
+      },
+
+      renderHubs() {
+        const container = document.getElementById('hubs-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        Object.values(BOURSE_HUBS).forEach(hub => {
+          const isCurrent = (Game.currentHub || 'antwerp') === hub.id;
+          const card = document.createElement('div');
+          card.className = `p-3.5 rounded border flex flex-col md:flex-row md:items-center justify-between gap-3 ${isCurrent ? 'bg-slateDark border-bonePaper' : 'bg-soot border-slateBorder'}`;
+          
+          card.innerHTML = `
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-bonePaper text-sm">${hub.name}</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded ${isCurrent ? 'bg-bonePaper text-soot font-bold' : 'bg-charcoal text-boneMuted border border-slateBorder'}">
+                  ${isCurrent ? 'ACTIVE HQ' : hub.country}
+                </span>
+              </div>
+              <p class="font-serif italic text-boneMuted text-[11px]">${hub.desc}</p>
+              <div class="text-[10px] text-boneLight">Specialty: <strong>${hub.specialty}</strong></div>
+            </div>
+            <div class="flex items-center gap-3 self-end md:self-auto font-mono">
+              <div class="text-right">
+                <span class="text-[9px] uppercase text-boneMuted block">Flight Ticket</span>
+                <span class="font-bold text-bonePaper">${hub.ticketCost === 0 ? 'FREE HQ' : `$${hub.ticketCost}`}</span>
+              </div>
+              <button class="btn-charter-hub px-3 py-1.5 rounded font-display font-bold text-xs uppercase tracking-wider transition ${isCurrent ? 'bg-soot border border-slateBorder text-boneMuted cursor-not-allowed' : 'bg-bonePaper hover:bg-white text-soot active:scale-95'}" ${isCurrent ? 'disabled' : ''}>
+                ${isCurrent ? 'Here Now' : 'Fly Charter ✈'}
+              </button>
+            </div>
+          `;
+
+          if (!isCurrent) {
+            card.querySelector('.btn-charter-hub').addEventListener('click', () => {
+              this.charterFlight(hub);
+            });
+          }
+
+          container.appendChild(card);
+        });
+      },
+
+      charterFlight(hub) {
+        if (Game.capital < hub.ticketCost) {
+          this.showModal("Insufficient Funds", `Flight charter to ${hub.name} requires $${hub.ticketCost}.`);
+          return;
+        }
+
+        Game.capital -= hub.ticketCost;
+        Game.currentHub = hub.id;
+        SoundFX.flightCharter();
+
+        this.addBlotterLog(`FLIGHT CHARTER`, `Flew courier flight to ${hub.name}.`, -hub.ticketCost);
+        document.getElementById('header-hub').textContent = hub.name.split(' (')[0];
+        document.getElementById('modal-hubs-backdrop').classList.add('hidden');
+
+        this.showModal("Charter Landed", `Arrived in ${hub.name}!\n\n${hub.desc}\n\nLocal brokers and sights are now gathering at your bourse suite.`);
+        this.updateHeaderMetrics();
+        this.spawnNewSeller(true);
       },
 
       switchTab(tabId) {
@@ -3159,6 +4053,11 @@
         const tier = Game.reputation < 200 ? 'Tier I' : (Game.reputation < 400 ? 'Tier II' : 'Master Sight-Holder');
         document.getElementById('header-reputation').textContent = `${tier} (${Game.reputation} pts)`;
         document.getElementById('badge-vault-count').textContent = Game.vault.length;
+        
+        const hub = BOURSE_HUBS[Game.currentHub || 'antwerp'];
+        if (hub && document.getElementById('header-hub')) {
+          document.getElementById('header-hub').textContent = hub.name.split(' (')[0];
+        }
         Game.save();
       },
 
@@ -3175,6 +4074,7 @@
     window.onload = function() {
       Game.load();
       GemRenderer.init();
+      CleftBench.init();
       UI.init();
 
       // Initialize default walk-in seller & stone
