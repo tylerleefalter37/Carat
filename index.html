@@ -122,7 +122,7 @@
 
         <div class="bg-soot px-2.5 py-1 rounded border border-slateBorder flex flex-col items-end">
           <span class="text-[9px] uppercase tracking-wider text-boneMuted">Liquid Capital</span>
-          <span id="header-capital" class="font-bold text-bonePaper text-sm md:text-base">$18,500</span>
+          <span id="header-capital" class="font-bold text-bonePaper text-sm md:text-base">$50,000</span>
         </div>
 
         <div class="bg-soot px-2.5 py-1 rounded border border-slateBorder flex flex-col items-end hidden sm:flex">
@@ -149,11 +149,22 @@
           <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">10× Master Loupe & Analysis Bench</h2>
           <p class="text-xs font-serif italic text-boneMuted">Adjust focal depth, rotate light vector to inspect inclusions, silk & body scintillation.</p>
         </div>
-        <div class="flex items-center gap-2">
-          <span id="bench-gem-tag" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slateBorder bg-charcoal text-boneLight">
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- INSTANT SKIP / NEXT PARCEL BUTTON -->
+          <button id="btn-bench-skip-gem" title="Pass this stone and pull a fresh parcel immediately (Shortcut: 'S' or Spacebar)" class="px-3 py-1.5 rounded bg-bonePaper hover:bg-white text-soot font-display font-bold text-xs uppercase tracking-wider transition active:scale-95 shadow flex items-center gap-1.5">
+            <span>⏭</span>
+            <span>Next Parcel / Skip</span>
+          </button>
+          
+          <!-- QUICK PARCEL SWITCHER DROPDOWN -->
+          <select id="bench-gem-switcher" class="bg-soot border border-slateBorder rounded px-2 py-1.5 text-xs font-mono text-bonePaper focus:outline-none focus:border-boneLight max-w-[210px] truncate" title="Switch active stone on loupe">
+            <option value="SELLER">Broker's Parcel</option>
+          </select>
+
+          <span id="bench-gem-tag" class="px-2 py-1 rounded text-[10px] font-mono border border-slateBorder bg-charcoal text-boneLight truncate max-w-[190px]">
             Round Brilliant Diamond • 1.84 ct
           </span>
-          <button id="btn-quick-tweezer-tap" title="Sound Tweezer Acoustic Ring" class="px-2 py-1 rounded border border-slateBorder bg-charcoal hover:bg-slateDark text-xs font-mono text-boneMuted hover:text-bonePaper transition">
+          <button id="btn-quick-tweezer-tap" title="Sound Tweezer Acoustic Ring" class="px-2 py-1.5 rounded border border-slateBorder bg-charcoal hover:bg-slateDark text-xs font-mono text-boneMuted hover:text-bonePaper transition">
             Tweezer Ping ♫
           </button>
         </div>
@@ -1425,7 +1436,7 @@
 
     // Global Game State
     let Game = {
-      capital: 18500,
+      capital: 50000,
       reputation: 120,
       day: 1,
       vault: [],
@@ -1457,7 +1468,11 @@
           const raw = localStorage.getItem('CARAT_CLEFT_SAVE_V1');
           if (raw) {
             const data = JSON.parse(raw);
-            this.capital = data.capital || 18500;
+            this.capital = data.capital || 50000;
+            // Upgrade legacy starting bankroll to $50,000
+            if (this.capital === 18500 || (this.capital < 50000 && (!data.day || data.day <= 1))) {
+              this.capital = 50000;
+            }
             this.reputation = data.reputation || 120;
             this.day = data.day || 1;
             this.vault = data.vault || [];
@@ -2164,6 +2179,41 @@
           SoundFX.tweezerPing();
         });
 
+        // Loupe Bench Instant Skip Button
+        document.getElementById('btn-bench-skip-gem').addEventListener('click', () => {
+          this.skipToNextGem();
+        });
+
+        // Loupe Bench Gem Switcher Dropdown
+        const benchSwitcher = document.getElementById('bench-gem-switcher');
+        if (benchSwitcher) {
+          benchSwitcher.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === 'SELLER' && Game.activeSeller) {
+              this.mountStoneOnBench(Game.activeSeller.stone);
+            } else {
+              const vaultGem = Game.vault.find(g => g.id === val);
+              if (vaultGem) {
+                this.mountStoneOnBench(vaultGem);
+              }
+            }
+            SoundFX.loupeClick();
+          });
+        }
+
+        // Global Keyboard Shortcut: 'S' or 'Space' to cycle stone/runner immediately
+        window.addEventListener('keydown', (e) => {
+          if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+          if (e.key === 's' || e.key === 'S' || e.code === 'Space') {
+            const benchVisible = !document.getElementById('view-bench').classList.contains('hidden');
+            const negoVisible = !document.getElementById('view-negotiation').classList.contains('hidden');
+            if (benchVisible || negoVisible) {
+              e.preventDefault();
+              this.skipToNextGem();
+            }
+          }
+        });
+
         // Bench to Negotiation
         document.getElementById('btn-bench-to-negotiate').addEventListener('click', () => {
           this.switchTab('view-negotiation');
@@ -2183,7 +2233,7 @@
 
         // New Seller Walk-in
         document.getElementById('btn-new-seller').addEventListener('click', () => {
-          this.spawnNewSeller();
+          this.spawnNewSeller(true);
           SoundFX.cashStamp();
         });
 
@@ -2212,7 +2262,7 @@
         document.getElementById('btn-walk-away').addEventListener('click', () => {
           if (!Game.activeSeller) return;
           this.logNego(`You politely declined ${Game.activeSeller.name}'s offer. Runner departed.`);
-          this.spawnNewSeller();
+          this.spawnNewSeller(true);
         });
 
         // Inspect Seller Stone on Bench
@@ -2399,7 +2449,12 @@
 
       mountStoneOnBench(gem) {
         if (!gem) return;
+        Game.activeStone = gem;
         GemRenderer.setGem(gem);
+        setTimeout(() => {
+          GemRenderer.resize();
+          GemRenderer.draw();
+        }, 20);
 
         // Header tag
         document.getElementById('bench-gem-tag').textContent = `${gem.shape} ${gem.variety} • ${gem.carat} ct`;
@@ -2440,9 +2495,39 @@
         // Benchmark Price
         document.getElementById('gem-benchmark-price').textContent = `$${gem.wholesaleValue.toLocaleString()}`;
         document.getElementById('gem-cert-badge').textContent = gem.certified ? `CERTIFIED (${gem.certNumber})` : 'UNCERTIFIED ROUGH';
+        
+        this.refreshBenchGemSwitcher();
       },
 
-      spawnNewSeller() {
+      skipToNextGem() {
+        this.spawnNewSeller(true);
+        SoundFX.tweezerPing();
+      },
+
+      refreshBenchGemSwitcher() {
+        const switcher = document.getElementById('bench-gem-switcher');
+        if (!switcher) return;
+        switcher.innerHTML = '';
+
+        if (Game.activeSeller && Game.activeSeller.stone) {
+          const s = Game.activeSeller.stone;
+          const opt = document.createElement('option');
+          opt.value = 'SELLER';
+          opt.textContent = `[Broker ${Game.activeSeller.avatar}] ${s.carat}ct ${s.shape} ${s.variety}`;
+          if (Game.activeStone && Game.activeStone.id === s.id) opt.selected = true;
+          switcher.appendChild(opt);
+        }
+
+        Game.vault.forEach(vg => {
+          const opt = document.createElement('option');
+          opt.value = vg.id;
+          opt.textContent = `[Vault] ${vg.carat}ct ${vg.shape} ${vg.variety}`;
+          if (Game.activeStone && Game.activeStone.id === vg.id) opt.selected = true;
+          switcher.appendChild(opt);
+        });
+      },
+
+      spawnNewSeller(forceMount = false) {
         const archetype = RUNNER_ARCHETYPES[Math.floor(Math.random() * RUNNER_ARCHETYPES.length)];
         const stone = GemFactory.createRandomGem();
         
@@ -2459,8 +2544,9 @@
           patience: 100
         };
 
-        // If no active stone on loupe, mount this one
-        if (!Game.activeStone) {
+        // If forceMount is true, OR if activeStone is not set, OR if current active stone is unowned, update the loupe bench!
+        const isCurrentStoneOwned = Game.activeStone && Game.vault.some(g => g.id === Game.activeStone.id);
+        if (forceMount || !Game.activeStone || !isCurrentStoneOwned) {
           Game.activeStone = stone;
           this.mountStoneOnBench(stone);
         }
@@ -2484,6 +2570,8 @@
         // Clear log
         const logBox = document.getElementById('nego-log-box');
         logBox.innerHTML = `<div class="text-boneMuted text-[11px]">[Day ${Game.day}] ${archetype.name} arrives offering ${stone.variety} (${stone.carat} ct).</div>`;
+        
+        this.refreshBenchGemSwitcher();
       },
 
       logNego(msg) {
@@ -2534,7 +2622,7 @@
           document.getElementById('seller-patience-bar').style.width = '0%';
           this.logNego(`${seller.name}: "${seller.dialogues.walkout}" [Runner packed up and left]`);
           setTimeout(() => {
-            this.spawnNewSeller();
+            this.spawnNewSeller(true);
           }, 1800);
         } else {
           document.getElementById('seller-patience-val').textContent = `${seller.patience}%`;
@@ -2561,7 +2649,7 @@
 
         this.updateHeaderMetrics();
         this.renderVaultGrid('ALL');
-        this.spawnNewSeller();
+        this.spawnNewSeller(true);
       },
 
       renderVaultGrid(filter = 'ALL') {
