@@ -583,10 +583,15 @@
               </div>
             </div>
 
-            <!-- Mount in Loupe -->
-            <button id="btn-mount-from-vault" class="w-full py-2 bg-bonePaper hover:bg-white text-soot font-display font-bold text-xs uppercase tracking-wider rounded transition">
-              Inspect on Loupe Bench 🔍
-            </button>
+            <!-- Vault Actions -->
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-mount-from-vault" class="py-2 bg-bonePaper hover:bg-white text-soot font-display font-bold text-xs uppercase tracking-wider rounded transition">
+                Inspect Loupe 🔍
+              </button>
+              <button id="btn-vault-to-auction" class="py-2 bg-slateDark hover:bg-slateBorder border border-slateBorder text-bonePaper font-display text-xs uppercase tracking-wider rounded transition">
+                Auction Block 🏛
+              </button>
+            </div>
           </div>
 
         </div>
@@ -598,11 +603,76 @@
     <section id="view-market" class="space-y-4 hidden">
       <div class="border-b border-slateBorder pb-2 flex justify-between items-center">
         <div>
-          <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">Wholesale B2B Showroom & Commissions</h2>
-          <p class="text-xs font-serif italic text-boneMuted">Fulfill bespoke atelier orders or memo gems to top jewelry houses.</p>
+          <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">Magnificent Jewels Auction Block & Atelier Showroom</h2>
+          <p class="text-xs font-serif italic text-boneMuted">Put gems on the public auction block for retail markups, fulfill atelier orders, or memo to sight-holders.</p>
         </div>
         <div class="font-mono text-xs text-boneMuted">
-          Atelier Liquidity: <span class="text-bonePaper font-bold">Active</span>
+          Saleroom Status: <span class="text-bonePaper font-bold">● Floor Active</span>
+        </div>
+      </div>
+
+      <!-- LIVE GAVEL AUCTION BLOCK (Christie's / Sotheby's Magnificent Jewels Saleroom) -->
+      <div class="bg-charcoal rounded-lg border border-slateBorder p-4 space-y-3 shadow-md">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slateBorder pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🏛</span>
+            <div>
+              <h3 class="font-display font-bold text-sm uppercase tracking-wider text-bonePaper">
+                Magnificent Jewels Live Gavel Auction <span class="text-xs font-mono text-boneMuted font-normal">• Geneva & 5th Avenue Saleroom</span>
+              </h3>
+              <p class="text-[11px] font-serif italic text-boneMuted">Sell vault parcels to private syndicates, royal collectors, and luxury ateliers at retail markups (125%–200%+ of wholesale).</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-soot border border-slateBorder text-xs font-mono text-boneLight">
+            Floor Floor: <strong class="text-bonePaper">● Bidding Open</strong>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          <!-- Gemstone Selection for Auction -->
+          <div class="md:col-span-5 space-y-2 font-mono text-xs">
+            <label for="auction-gem-select" class="text-boneMuted block text-[11px] uppercase tracking-wider">Mount Parcel on Auction Block:</label>
+            <select id="auction-gem-select" class="w-full bg-soot border border-slateBorder rounded p-2 text-xs font-mono text-bonePaper focus:outline-none focus:border-boneLight">
+              <option value="">-- Choose Vault Parcel for Auction --</option>
+            </select>
+            <div id="auction-gem-meta" class="p-2.5 rounded bg-soot border border-slateBorder text-[11px] text-boneMuted space-y-1 hidden">
+              <div class="flex justify-between">
+                <span>Lot Specification:</span>
+                <span id="auction-lot-spec" class="font-bold text-boneLight">1.84 ct Round Brilliant</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Wholesale Rap Benchmark:</span>
+                <span id="auction-lot-wholesale" class="text-boneMuted">$0</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Estimated Hammer Range:</span>
+                <span id="auction-lot-range" class="text-bonePaper font-bold">$0 – $0</span>
+              </div>
+              <div class="flex justify-between text-[10px] pt-1 border-t border-slateBorder/60">
+                <span>Catalog Valuation Note:</span>
+                <span id="auction-lot-multiplier" class="text-boneLight">Certified Ideal (+30% Premium)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Bidding Arena / Gavel Feed -->
+          <div class="md:col-span-7 bg-soot rounded border border-slateBorder p-3 flex flex-col justify-between min-h-[145px]">
+            <div class="flex justify-between items-center border-b border-slateBorder/60 pb-1.5 text-xs font-mono">
+              <span class="text-boneMuted">Current Bid:</span>
+              <span id="live-auction-bid" class="font-bold text-xl text-bonePaper">$0</span>
+              <span id="live-auction-timer" class="px-2 py-0.5 rounded bg-charcoal text-[10px] text-boneLight border border-slateBorder">Awaiting Lot</span>
+            </div>
+            <!-- Bidding Log / Action Feed -->
+            <div id="live-auction-log" class="h-16 overflow-y-auto space-y-1 text-[11px] font-mono text-boneMuted my-1">
+              <div class="italic text-[10px] text-boneMuted/70">Select a vault gem and click 'Drop Gavel & Open Floor Bidding' to commence floor bidding.</div>
+            </div>
+            <!-- Controls -->
+            <div class="pt-1 flex gap-2">
+              <button id="btn-start-gem-auction" disabled class="flex-1 py-2 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed">
+                🔨 Drop Gavel & Open Floor Bidding
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1079,9 +1149,9 @@
               </div>
 
               <div class="p-3 rounded bg-soot border border-slateBorder space-y-1">
-                <strong class="text-bonePaper block font-display text-[11px]">Wholesale Memo Liquidation</strong>
+                <strong class="text-bonePaper block font-display text-[11px]">Magnificent Jewels Auction Block</strong>
                 <p class="font-serif text-[10px] text-boneMuted leading-relaxed">
-                  Facing a capital crunch? Liquidate any parcel immediately at an 80% spot discount to Antwerp bourse dealers for instant wire settlement.
+                  Mount any stone on the Geneva auction floor. Competitive bidding from private collectors and royal buyers drives final hammer prices to 125%–200%+ of wholesale Rapaport value.
                 </p>
               </div>
             </div>
@@ -1211,8 +1281,27 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-          osc.start();
+          osc.start(now);
           osc.stop(now + 0.7);
+        } catch(e) {}
+      },
+      // Auction gavel strike
+      gavelStrike() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(50, now + 0.14);
+          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
         } catch(e) {}
       }
     };
@@ -1972,6 +2061,8 @@
        UI CONTROLLERS & GAMEPLAY LOGIC
        ========================================================================= */
     const UI = {
+      auctionInterval: null,
+
       init() {
         // Tab Navigation
         document.querySelectorAll('.nav-tab-btn').forEach(btn => {
@@ -2164,6 +2255,28 @@
           }
         });
 
+        // Vault to Auction Floor Shortcut
+        document.getElementById('btn-vault-to-auction').addEventListener('click', () => {
+          if (Game.selectedVaultStone) {
+            this.switchTab('view-market');
+            const select = document.getElementById('auction-gem-select');
+            if (select) {
+              select.value = Game.selectedVaultStone.id;
+              this.updateAuctionGemSelection(Game.selectedVaultStone.id);
+            }
+          }
+        });
+
+        // Auction Block Select & Action
+        const auctionSelect = document.getElementById('auction-gem-select');
+        auctionSelect.addEventListener('change', (e) => {
+          this.updateAuctionGemSelection(e.target.value);
+        });
+
+        document.getElementById('btn-start-gem-auction').addEventListener('click', () => {
+          this.startLiveGemAuction();
+        });
+
         // Wholesale Liquidation Select
         const liqSelect = document.getElementById('liquidate-select');
         liqSelect.addEventListener('change', (e) => {
@@ -2235,9 +2348,11 @@
         } else if (tabId === 'view-vault') {
           this.renderVaultGrid('ALL');
           this.refreshLiquidationSelect();
+          this.refreshAuctionGemSelect();
         } else if (tabId === 'view-market') {
           this.renderDockets();
           this.refreshLiquidationSelect();
+          this.refreshAuctionGemSelect();
         } else if (tabId === 'view-ledger') {
           this.renderUpgrades();
           this.renderBlotter();
@@ -2498,6 +2613,8 @@
 
           grid.appendChild(card);
         });
+
+        this.refreshAuctionGemSelect();
       },
 
       showVaultDetail(gem) {
@@ -2667,6 +2784,185 @@
           opt.textContent = `${gem.variety} (${gem.carat} ct, ${gem.clarity}) - Rap: $${gem.wholesaleValue.toLocaleString()}`;
           select.appendChild(opt);
         });
+      },
+
+      refreshAuctionGemSelect() {
+        const select = document.getElementById('auction-gem-select');
+        if (!select) return;
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">-- Choose Vault Parcel for Auction --</option>';
+        Game.vault.forEach(gem => {
+          const opt = document.createElement('option');
+          opt.value = gem.id;
+          const certLabel = gem.certified ? ` [${gem.certNumber}]` : ' [Rough]';
+          opt.textContent = `${gem.variety} (${gem.carat} ct, ${gem.clarity})${certLabel} - Rap: $${gem.wholesaleValue.toLocaleString()}`;
+          select.appendChild(opt);
+        });
+        if (currentVal && Game.vault.some(g => g.id === currentVal)) {
+          select.value = currentVal;
+        }
+      },
+
+      updateAuctionGemSelection(gemId) {
+        const meta = document.getElementById('auction-gem-meta');
+        const btn = document.getElementById('btn-start-gem-auction');
+        const gem = Game.vault.find(g => g.id === gemId);
+
+        if (!gem) {
+          meta.classList.add('hidden');
+          btn.disabled = true;
+          document.getElementById('live-auction-bid').textContent = '$0';
+          return;
+        }
+
+        meta.classList.remove('hidden');
+        btn.disabled = false;
+
+        document.getElementById('auction-lot-spec').textContent = `${gem.carat} ct ${gem.shape} ${gem.variety} (${gem.clarity})`;
+        document.getElementById('auction-lot-wholesale').textContent = `$${gem.wholesaleValue.toLocaleString()}`;
+
+        // Calculate expected retail hammer range based on quality factors
+        let multMin = 1.25;
+        let multMax = 1.65;
+        let notes = [];
+
+        if (gem.certified) {
+          multMin += 0.25;
+          multMax += 0.35;
+          notes.push('GIA Laboratory Certificate (+30% premium)');
+        }
+        if (gem.type === 'Alexandrite') {
+          multMin += 0.30;
+          multMax += 0.50;
+          notes.push('Russian Color-Change Rarity (+40% premium)');
+        } else if (gem.type === 'Sapphire' && gem.treatment === 'Natural Unheated') {
+          multMin += 0.25;
+          multMax += 0.45;
+          notes.push('Untreated Ceylon Rutile Silk (+35% premium)');
+        }
+        if (['FL', 'VVS1', 'VVS2'].includes(gem.clarity)) {
+          multMin += 0.15;
+          multMax += 0.25;
+          notes.push('Collector Eye-Clean Clarity');
+        }
+
+        const estLow = Math.round((gem.wholesaleValue * multMin) / 100) * 100;
+        const estHigh = Math.round((gem.wholesaleValue * multMax) / 100) * 100;
+
+        document.getElementById('auction-lot-range').textContent = `$${estLow.toLocaleString()} – $${estHigh.toLocaleString()}`;
+        document.getElementById('auction-lot-multiplier').textContent = notes.length > 0 ? notes.join(' • ') : 'Standard Fine Wholesale Lot';
+
+        const openBid = Math.round((gem.wholesaleValue * 0.90) / 100) * 100;
+        document.getElementById('live-auction-bid').textContent = `$${openBid.toLocaleString()}`;
+      },
+
+      startLiveGemAuction() {
+        const select = document.getElementById('auction-gem-select');
+        const gemId = select.value;
+        const gem = Game.vault.find(g => g.id === gemId);
+        if (!gem) return;
+
+        const btn = document.getElementById('btn-start-gem-auction');
+        btn.disabled = true;
+        select.disabled = true;
+
+        const logBox = document.getElementById('live-auction-log');
+        const timerLabel = document.getElementById('live-auction-timer');
+        const bidLabel = document.getElementById('live-auction-bid');
+
+        logBox.innerHTML = '';
+        const addAuctionLine = (text, isHigh = false) => {
+          const div = document.createElement('div');
+          div.className = isHigh ? 'text-bonePaper font-bold text-[11px]' : 'text-boneLight text-[10px]';
+          div.textContent = text;
+          logBox.appendChild(div);
+          logBox.scrollTop = logBox.scrollHeight;
+        };
+
+        // Determine starting bid
+        let currentBid = Math.round((gem.wholesaleValue * 0.90) / 100) * 100;
+        bidLabel.textContent = `$${currentBid.toLocaleString()}`;
+        addAuctionLine(`[LOT MOUNTED] ${gem.carat} ct ${gem.variety}. Opening floor bid: $${currentBid.toLocaleString()}`);
+        SoundFX.gavelStrike();
+
+        const bidderPool = [
+          'Geneva_PrivateAtelier', 'Mayfair_Diamantaire', 'Sheikh_Al_Sabah_Estate',
+          'Sotheby_Geneva_Paddle_42', 'Cartier_Heritage_Archives', 'PlaceVendome_Bespoke',
+          'Monaco_HighJewelry_Syndicate', 'Tokyo_Imperial_Vault'
+        ];
+
+        // Target hammer price based on quality multipliers
+        let targetMultiplier = 1.35 + Math.random() * 0.35;
+        if (gem.certified) targetMultiplier += 0.30;
+        if (gem.type === 'Alexandrite' || (gem.type === 'Sapphire' && gem.treatment === 'Natural Unheated')) targetMultiplier += 0.30;
+        if (['FL', 'VVS1', 'VVS2'].includes(gem.clarity)) targetMultiplier += 0.15;
+
+        const targetHammer = Math.round((gem.wholesaleValue * targetMultiplier) / 100) * 100;
+        let step = 0;
+        const maxSteps = 5;
+
+        if (this.auctionInterval) clearInterval(this.auctionInterval);
+
+        this.auctionInterval = setInterval(() => {
+          step++;
+
+          if (step <= maxSteps) {
+            const bidder = bidderPool[Math.floor(Math.random() * bidderPool.length)];
+            const jump = Math.round(((targetHammer - currentBid) / (maxSteps - step + 1.2)) / 50) * 50;
+            currentBid += Math.max(250, jump);
+            bidLabel.textContent = `$${currentBid.toLocaleString()}`;
+            timerLabel.textContent = `Round ${step}/${maxSteps}`;
+            addAuctionLine(`[BID] ${bidder} raises to $${currentBid.toLocaleString()}!`);
+            SoundFX.gavelStrike();
+          } else {
+            clearInterval(this.auctionInterval);
+            timerLabel.textContent = 'HAMMER DOWN!';
+            SoundFX.gavelStrike();
+            setTimeout(() => SoundFX.gavelStrike(), 160);
+            setTimeout(() => SoundFX.gavelStrike(), 340);
+
+            addAuctionLine(`[SOLD!] Gavel drops! Sold for $${currentBid.toLocaleString()}!`, true);
+
+            setTimeout(() => {
+              this.settleGemAuction(gem, currentBid);
+              select.disabled = false;
+              btn.disabled = false;
+            }, 800);
+          }
+        }, 1100);
+      },
+
+      settleGemAuction(gem, finalHammer) {
+        const index = Game.vault.findIndex(g => g.id === gem.id);
+        if (index === -1) return;
+
+        Game.vault.splice(index, 1);
+        Game.capital += finalHammer;
+        Game.reputation += 30;
+
+        const profit = finalHammer - (gem.costBasis || 0);
+
+        SoundFX.cashStamp();
+        this.addBlotterLog(
+          `MAGNIFICENT JEWELS AUCTION`,
+          `Sold ${gem.variety} (${gem.carat} ct) at Geneva gavel auction. Hammer: $${finalHammer.toLocaleString()}.`,
+          finalHammer
+        );
+
+        this.showModal(
+          "🏛 Magnificent Jewels Auction Cleared",
+          `AUCTION LOT HAMMERED!\n\n` +
+          `• Gemstone: ${gem.carat} ct ${gem.shape} ${gem.variety} (${gem.clarity})\n` +
+          `• Wholesale Rapaport Baseline: $${gem.wholesaleValue.toLocaleString()}\n` +
+          `• Final Auction Hammer Price: $${finalHammer.toLocaleString()}\n` +
+          `• Profit Over Acquisition Cost: +$${profit.toLocaleString()}\n\n` +
+          `Wire funds of $${finalHammer.toLocaleString()} and +30 Exchange Prestige deposited directly to your liquid account!`
+        );
+
+        this.updateHeaderMetrics();
+        this.renderVaultGrid('ALL');
+        this.refreshAuctionGemSelect();
+        this.refreshLiquidationSelect();
       },
 
       renderUpgrades() {
