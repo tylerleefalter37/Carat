@@ -1,0 +1,2803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Carat & Cleft: Wholesale Gem Exchange</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cinzel, Playfair Display & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            soot: '#121212',
+            charcoal: '#1c1c1c',
+            slateDark: '#262626',
+            slateBorder: '#383838',
+            boneMuted: '#9e9c96',
+            boneLight: '#e4e1d8',
+            bonePaper: '#f7f6f2',
+            alabaster: '#ffffff'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            display: ['"Cinzel"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #121212;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #333333;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4f4f4f;
+    }
+
+    /* Range input styling - monochrome farmhouse */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #2a2a2a;
+      height: 4px;
+      border-radius: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #f7f6f2;
+      border: 2px solid #121212;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+
+    .ruled-line {
+      background-image: linear-gradient(to right, transparent, #383838, transparent);
+    }
+
+    /* Subdued loupe reticle animation */
+    @keyframes pulseReticle {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 0.55; }
+    }
+    .reticle-ring {
+      animation: pulseReticle 4s ease-in-out infinite;
+    }
+
+    /* iOS smooth tap highlight removal */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea {
+      user-select: auto;
+    }
+  </style>
+</head>
+<body class="bg-soot text-bonePaper font-sans antialiased min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-bonePaper selection:text-soot">
+
+  <!-- TOP HEADER / BENCH STATUS -->
+  <header class="border-b border-slateBorder bg-charcoal/95 backdrop-blur sticky top-0 z-40 px-4 py-2.5">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <!-- Title & Branding -->
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded border border-slateBorder bg-soot flex items-center justify-center font-display text-xs font-bold text-boneLight">
+          ◆
+        </div>
+        <div>
+          <h1 class="font-display font-bold tracking-widest text-sm md:text-base text-bonePaper uppercase">
+            Carat & Cleft
+          </h1>
+          <p class="font-mono text-[9px] uppercase tracking-wider text-boneMuted">
+            Wholesale Gem Exchange • Antwerp / 5th Ave
+          </p>
+        </div>
+      </div>
+
+      <!-- Financial & Prestige Metrics -->
+      <div class="flex items-center gap-3 md:gap-6 font-mono text-xs">
+        <button id="btn-open-manual" class="px-2.5 py-1 bg-soot hover:bg-slateDark border border-slateBorder text-boneLight hover:text-bonePaper rounded font-mono text-[11px] flex items-center gap-1.5 transition active:scale-95 shadow-sm">
+          <span>📖</span>
+          <span class="hidden sm:inline">Guild Manual</span>
+        </button>
+
+        <div class="bg-soot px-2.5 py-1 rounded border border-slateBorder flex flex-col items-end">
+          <span class="text-[9px] uppercase tracking-wider text-boneMuted">Liquid Capital</span>
+          <span id="header-capital" class="font-bold text-bonePaper text-sm md:text-base">$18,500</span>
+        </div>
+
+        <div class="bg-soot px-2.5 py-1 rounded border border-slateBorder flex flex-col items-end hidden sm:flex">
+          <span class="text-[9px] uppercase tracking-wider text-boneMuted">Exchange Rep</span>
+          <span id="header-reputation" class="text-boneLight font-semibold">Tier I (120 pts)</span>
+        </div>
+
+        <button id="btn-advance-day" class="group relative px-3 py-1.5 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs tracking-wider transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+          <span>End Day</span>
+          <span id="header-day" class="font-mono text-[10px] bg-soot text-bonePaper px-1.5 py-0.2 rounded">D.1</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main class="max-w-6xl w-full mx-auto p-3 md:p-6 flex-1 pb-24">
+
+    <!-- VIEW 1: INSPECTION BENCH & 4 C's (DEFAULT) -->
+    <section id="view-bench" class="space-y-4">
+      <!-- Section Sub-header -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slateBorder pb-2">
+        <div>
+          <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">10× Master Loupe & Analysis Bench</h2>
+          <p class="text-xs font-serif italic text-boneMuted">Adjust focal depth, rotate light vector to inspect inclusions, silk & body scintillation.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="bench-gem-tag" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slateBorder bg-charcoal text-boneLight">
+            Round Brilliant Diamond • 1.84 ct
+          </span>
+          <button id="btn-quick-tweezer-tap" title="Sound Tweezer Acoustic Ring" class="px-2 py-1 rounded border border-slateBorder bg-charcoal hover:bg-slateDark text-xs font-mono text-boneMuted hover:text-bonePaper transition">
+            Tweezer Ping ♫
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Gemstone Loupe Pad Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left: Interactive Canvas Gem Viewport (7 Cols) -->
+        <div class="lg:col-span-7 bg-charcoal rounded-lg border border-slateBorder p-3 relative flex flex-col items-center justify-center shadow-lg">
+          
+          <!-- Top Canvas Overlays: Lighting Toggle & Lens Filter -->
+          <div class="w-full flex items-center justify-between z-10 mb-2 px-1">
+            <!-- Light Switch (5500K Daylight vs 2700K Incandescent vs Darkfield UV) -->
+            <div class="flex items-center gap-1 bg-soot p-1 rounded border border-slateBorder text-[10px] font-mono">
+              <span class="text-boneMuted px-1">Light:</span>
+              <button id="btn-light-daylight" class="px-2 py-0.5 rounded bg-bonePaper text-soot font-bold">5500K Day</button>
+              <button id="btn-light-warm" class="px-2 py-0.5 rounded text-boneMuted hover:text-bonePaper">2700K Lamp</button>
+              <button id="btn-light-uv" class="px-2 py-0.5 rounded text-boneMuted hover:text-bonePaper">Darkfield / UV</button>
+            </div>
+
+            <!-- Loupe Magnification Indicator -->
+            <div class="flex items-center gap-1 bg-soot p-1 rounded border border-slateBorder text-[10px] font-mono">
+              <span class="text-boneMuted px-1">Mag:</span>
+              <button id="btn-mag-1x" class="px-1.5 py-0.5 rounded text-boneMuted hover:text-bonePaper">1×</button>
+              <button id="btn-mag-5x" class="px-1.5 py-0.5 rounded text-boneMuted hover:text-bonePaper">5×</button>
+              <button id="btn-mag-10x" class="px-1.5 py-0.5 rounded bg-bonePaper text-soot font-bold">10×</button>
+            </div>
+          </div>
+
+          <!-- THE CANVAS -->
+          <div class="relative w-full aspect-square max-w-[440px] flex items-center justify-center bg-[#0d0d0d] rounded border border-slateBorder overflow-hidden shadow-inner cursor-crosshair" id="canvas-container">
+            <canvas id="loupeCanvas" class="w-full h-full block"></canvas>
+            
+            <!-- Graticule Reticle Lines (Loupe Millimeter Gauge) -->
+            <div id="loupe-reticle" class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-40">
+              <div class="w-48 h-48 border border-dashed border-boneMuted/40 rounded-full flex items-center justify-center reticle-ring">
+                <div class="w-24 h-24 border border-boneMuted/30 rounded-full"></div>
+              </div>
+              <div class="absolute w-full h-[1px] bg-boneMuted/15"></div>
+              <div class="absolute h-full w-[1px] bg-boneMuted/15"></div>
+              <span class="absolute bottom-2 right-2 text-[9px] font-mono text-boneMuted/50 tracking-widest">OPTICAL CALIBRATION 10X</span>
+            </div>
+
+            <!-- Interactive Light Angle Guide Hint -->
+            <div class="absolute top-2 left-2 pointer-events-none text-[9px] font-mono text-boneMuted/60 bg-soot/80 px-1.5 py-0.5 rounded border border-slateBorder/40">
+              Drag stone to rotate facet fire
+            </div>
+          </div>
+
+          <!-- Interactive Focal & Rotation Sliders -->
+          <div class="w-full mt-3 grid grid-cols-2 gap-3 text-xs font-mono">
+            <div class="bg-soot p-2 rounded border border-slateBorder">
+              <div class="flex justify-between text-[10px] text-boneMuted mb-1">
+                <span>Focal Depth (Inclusions)</span>
+                <span id="lbl-focal-depth">Crown Facets</span>
+              </div>
+              <input type="range" id="slider-focal" min="0" max="100" value="50" class="w-full">
+            </div>
+
+            <div class="bg-soot p-2 rounded border border-slateBorder">
+              <div class="flex justify-between text-[10px] text-boneMuted mb-1">
+                <span>Light Arc Angle</span>
+                <span id="lbl-light-angle">45° North</span>
+              </div>
+              <input type="range" id="slider-light" min="0" max="360" value="45" class="w-full">
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: 4 C's Diagnostic Console & Testing Tools (5 Cols) -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-3">
+          
+          <!-- Micro-Scale Readout Box -->
+          <div class="bg-charcoal p-4 rounded-lg border border-slateBorder shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-display text-xs uppercase tracking-widest text-boneMuted">Precision Diamond Micro-Scale</span>
+              <button id="btn-tare-scale" class="px-2 py-0.5 rounded border border-slateBorder bg-soot hover:bg-slateDark text-[10px] font-mono text-boneLight transition">
+                TARE / ZERO
+              </button>
+            </div>
+            <div class="bg-soot border border-slateBorder rounded p-3 text-center">
+              <div id="scale-readout" class="font-mono text-3xl md:text-4xl font-bold tracking-tight text-bonePaper">
+                1.842 <span class="text-sm font-normal text-boneMuted">ct</span>
+              </div>
+              <div class="flex justify-around text-[10px] font-mono text-boneMuted mt-2 pt-2 border-t border-slateBorder/60">
+                <span>Weight: <strong id="val-weight-mg" class="text-boneLight">368.4 mg</strong></span>
+                <span>Specific Gravity: <strong id="val-sg" class="text-boneLight">3.52 g/cm³</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 C's Breakdown Cards -->
+          <div class="bg-charcoal p-4 rounded-lg border border-slateBorder space-y-3 shadow-sm flex-1">
+            <h3 class="font-display font-semibold text-xs tracking-wider text-bonePaper uppercase border-b border-slateBorder pb-1">
+              Gemological Profile
+            </h3>
+
+            <!-- Variety & Species -->
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-boneMuted font-mono">Mineral Variety</span>
+              <span id="gem-variety" class="font-serif font-bold text-bonePaper text-sm">Natural Diamond (White)</span>
+            </div>
+
+            <!-- Shape & Cut proportions -->
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-boneMuted font-mono">Cut & Proportions</span>
+              <div class="text-right">
+                <span id="gem-shape" class="font-mono font-bold text-boneLight">Round Brilliant</span>
+                <span id="gem-cut-grade" class="text-[10px] block text-boneMuted font-mono">Ideal (Table 57% • Depth 61.8%)</span>
+              </div>
+            </div>
+
+            <!-- Color Grading Master Bar -->
+            <div class="border-t border-slateBorder/60 pt-2 text-xs">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-boneMuted font-mono">Color Grade</span>
+                <span id="gem-color-code" class="font-mono font-bold text-bonePaper">D (Colorless)</span>
+              </div>
+              <div class="grid grid-cols-6 gap-1 text-[9px] font-mono text-center text-boneMuted">
+                <div class="p-1 rounded bg-slateDark border border-boneLight text-boneLight font-bold">D-F</div>
+                <div class="p-1 rounded bg-soot border border-slateBorder">G-H</div>
+                <div class="p-1 rounded bg-soot border border-slateBorder">I-J</div>
+                <div class="p-1 rounded bg-soot border border-slateBorder">K-M</div>
+                <div class="p-1 rounded bg-soot border border-slateBorder">Fancy</div>
+                <div class="p-1 rounded bg-soot border border-slateBorder">Special</div>
+              </div>
+            </div>
+
+            <!-- Clarity Analysis -->
+            <div class="border-t border-slateBorder/60 pt-2 text-xs">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-boneMuted font-mono">Internal Clarity</span>
+                <span id="gem-clarity" class="font-mono font-bold text-bonePaper">VVS2 (Micro Pinpoints)</span>
+              </div>
+              <p id="gem-clarity-desc" class="text-[11px] font-serif italic text-boneMuted leading-relaxed">
+                Minute pinpoints visible under 10× darkfield illumination. Pavilion and table completely eye-clean.
+              </p>
+            </div>
+
+            <!-- Special Phenom / Alexandrite / Sapphire Silk Box -->
+            <div id="gem-special-phenom-box" class="border border-slateBorder bg-soot p-2 rounded text-xs space-y-1">
+              <div class="flex justify-between font-mono text-[11px]">
+                <span class="text-boneMuted">Optical Phenomenon:</span>
+                <span id="gem-phenom-title" class="font-bold text-boneLight">None (Inert UV)</span>
+              </div>
+              <p id="gem-phenom-desc" class="text-[10px] text-boneMuted font-mono">
+                Stone exhibits classic high-dispersion optical refraction and diamond fire index (RI 2.417).
+              </p>
+            </div>
+
+            <!-- Estimated Rapaport Benchmark Baseline -->
+            <div class="bg-soot p-3 rounded border border-slateBorder flex items-center justify-between">
+              <div>
+                <span class="text-[9px] uppercase tracking-wider text-boneMuted font-mono block">Wholesale Benchmark</span>
+                <span id="gem-benchmark-price" class="font-mono text-lg font-bold text-bonePaper">$14,200</span>
+              </div>
+              <div class="text-right">
+                <span id="gem-cert-badge" class="px-2 py-0.5 rounded text-[10px] font-mono border border-slateBorder bg-charcoal text-boneMuted">
+                  UNCERTIFIED ROUGH
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bench Quick Actions -->
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-bench-to-negotiate" class="py-2.5 px-3 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95 text-center">
+              Enter Negotiation →
+            </button>
+            <button id="btn-bench-to-vault" class="py-2.5 px-3 bg-slateDark hover:bg-slateBorder border border-slateBorder text-bonePaper rounded font-display font-semibold text-xs uppercase tracking-wider transition active:scale-95 text-center">
+              Deposit to Vault
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 2: NEGOTIATION TABLE & SOURCING BROKERS -->
+    <section id="view-negotiation" class="space-y-4 hidden">
+      <div class="border-b border-slateBorder pb-2 flex justify-between items-center">
+        <div>
+          <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">Private Sourcing Room & Negotiation</h2>
+          <p class="text-xs font-serif italic text-boneMuted">Counter-offer runners, estate executors, and Antwerp rough cutters.</p>
+        </div>
+        <button id="btn-new-seller" class="px-3 py-1 bg-charcoal hover:bg-slateDark border border-slateBorder text-boneLight rounded text-xs font-mono transition">
+          Next Walk-In Runner ↺
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Broker Dossier & Pitch (5 Cols) -->
+        <div class="lg:col-span-5 bg-charcoal rounded-lg border border-slateBorder p-4 space-y-4 shadow-sm flex flex-col justify-between">
+          <div>
+            <!-- Runner Profile Header -->
+            <div class="flex items-center space-x-3 border-b border-slateBorder pb-3">
+              <div id="seller-avatar" class="w-12 h-12 rounded border border-slateBorder bg-soot flex items-center justify-center font-display text-lg text-bonePaper">
+                MC
+              </div>
+              <div>
+                <h3 id="seller-name" class="font-serif font-bold text-base text-bonePaper">Mme. Corbeau</h3>
+                <p id="seller-title" class="font-mono text-xs text-boneMuted">Estate Liquidator • Paris / Geneva</p>
+              </div>
+            </div>
+
+            <!-- Dialogue / Seller's Stance -->
+            <div class="mt-4 p-3 rounded bg-soot border border-slateBorder relative">
+              <div class="absolute -top-2 left-4 px-1.5 bg-charcoal text-[9px] font-mono uppercase tracking-wider text-boneMuted border border-slateBorder">
+                Seller's Pitch
+              </div>
+              <p id="seller-speech" class="text-xs font-serif italic text-boneLight leading-relaxed pt-1">
+                "This unheated cushion sapphire was secured from an old Normandy estate. The family needs liquidity before the weekend. Do not insult me with scrap pawnshop offers."
+              </p>
+            </div>
+
+            <!-- Patience Gauge -->
+            <div class="mt-4 space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <span class="text-boneMuted">Broker Patience</span>
+                <span id="seller-patience-val" class="font-bold text-boneLight">100%</span>
+              </div>
+              <div class="w-full bg-soot h-2 rounded border border-slateBorder overflow-hidden">
+                <div id="seller-patience-bar" class="h-full bg-bonePaper transition-all duration-300" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <!-- Proposed Stone Summary Card -->
+            <div class="mt-4 bg-soot p-3 rounded border border-slateBorder text-xs space-y-1.5 font-mono">
+              <div class="text-[10px] uppercase text-boneMuted tracking-wider">Parcel Under Review</div>
+              <div id="nego-gem-title" class="font-serif text-sm font-bold text-bonePaper">Unheated Royal Sapphire (2.45 ct)</div>
+              <div class="flex justify-between text-boneMuted text-[11px]">
+                <span>Clarity: <span id="nego-gem-clarity" class="text-boneLight">VS1</span></span>
+                <span>Cut: <span id="nego-gem-cut" class="text-boneLight">Cushion (Ideal)</span></span>
+              </div>
+              <div class="flex justify-between text-boneMuted text-[11px]">
+                <span>Wholesale Rap Estimate:</span>
+                <span id="nego-gem-rap" class="text-bonePaper font-bold">$9,200</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inspect on Loupe Button -->
+          <button id="btn-inspect-seller-stone" class="w-full py-2 bg-slateDark hover:bg-slateBorder border border-slateBorder text-bonePaper rounded font-display text-xs tracking-wider uppercase transition">
+            Mount Stone in Loupe for Testing 🔍
+          </button>
+        </div>
+
+        <!-- Bidding & Bargaining Console (7 Cols) -->
+        <div class="lg:col-span-7 bg-charcoal rounded-lg border border-slateBorder p-5 space-y-5 flex flex-col justify-between shadow-sm">
+          
+          <div>
+            <div class="flex items-center justify-between border-b border-slateBorder pb-3">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-boneMuted">Seller Asking Price</span>
+                <div id="seller-ask-price" class="font-mono text-3xl font-bold text-bonePaper">$11,500</div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-boneMuted">Estimated Profit Margin</span>
+                <div id="seller-projected-margin" class="font-mono text-sm text-boneLight">Wholesale: ~15-28%</div>
+              </div>
+            </div>
+
+            <!-- Bidding Slider & Presets -->
+            <div class="mt-6 space-y-4">
+              <div class="flex justify-between items-center">
+                <label for="bid-amount" class="text-xs font-mono uppercase tracking-wider text-boneMuted">Your Offer Draft</label>
+                <div class="flex items-center gap-1 font-mono text-2xl font-bold text-bonePaper">
+                  <span>$</span>
+                  <input type="number" id="bid-input" class="bg-soot border border-slateBorder rounded px-2 py-1 text-bonePaper w-36 text-right focus:outline-none focus:border-boneLight" value="8000">
+                </div>
+              </div>
+
+              <!-- Quick Percentage Bidding Buttons -->
+              <div class="grid grid-cols-4 gap-2 text-xs font-mono">
+                <button data-pct="0.60" class="btn-bid-pct py-1.5 rounded bg-soot hover:bg-slateDark border border-slateBorder text-boneMuted hover:text-bonePaper transition">
+                  -40% (Low)
+                </button>
+                <button data-pct="0.75" class="btn-bid-pct py-1.5 rounded bg-soot hover:bg-slateDark border border-slateBorder text-boneMuted hover:text-bonePaper transition">
+                  -25% (Shrewd)
+                </button>
+                <button data-pct="0.88" class="btn-bid-pct py-1.5 rounded bg-soot hover:bg-slateDark border border-slateBorder text-boneMuted hover:text-bonePaper transition">
+                  -12% (Fair)
+                </button>
+                <button data-pct="1.00" class="btn-bid-pct py-1.5 rounded bg-soot hover:bg-slateDark border border-slateBorder text-boneLight font-bold transition">
+                  Match Ask
+                </button>
+              </div>
+
+              <!-- Negotiation Message Log -->
+              <div id="nego-log-box" class="h-32 bg-soot border border-slateBorder rounded p-2.5 overflow-y-auto space-y-1.5 text-xs font-mono">
+                <div class="text-boneMuted text-[11px]">[10:14] Runner enters chamber and places parcel onto velvet pad.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Negotiation Action Bar -->
+          <div class="grid grid-cols-3 gap-3 pt-2">
+            <button id="btn-submit-counter" class="py-3 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95 shadow">
+              Submit Counter Offer
+            </button>
+            <button id="btn-accept-asking" class="py-3 bg-charcoal hover:bg-slateDark border border-boneLight/60 text-bonePaper rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95">
+              Accept Asking Price
+            </button>
+            <button id="btn-walk-away" class="py-3 bg-soot hover:bg-slateDark border border-slateBorder text-boneMuted hover:text-bonePaper rounded font-display text-xs uppercase tracking-wider transition">
+              Decline & Dismiss
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 3: VAULT, PARCEL INVENTORY & LAPIDARY BENCH -->
+    <section id="view-vault" class="space-y-4 hidden">
+      <div class="border-b border-slateBorder pb-2 flex flex-wrap justify-between items-center gap-2">
+        <div>
+          <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">The Vault & Master Lapidary Studio</h2>
+          <p class="text-xs font-serif italic text-boneMuted">Store certified inventory, recut stones to excise inclusions, or dispatch to grading institutes.</p>
+        </div>
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <span class="text-boneMuted">Filter:</span>
+          <button data-filter="ALL" class="vault-filter-btn px-2 py-0.5 rounded bg-bonePaper text-soot font-bold">All (<span id="vault-count-all">0</span>)</button>
+          <button data-filter="DIAMOND" class="vault-filter-btn px-2 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted">Diamonds</button>
+          <button data-filter="SAPPHIRE" class="vault-filter-btn px-2 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted">Sapphires</button>
+          <button data-filter="ALEXANDRITE" class="vault-filter-btn px-2 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted">Alexandrite</button>
+        </div>
+      </div>
+
+      <!-- Vault Tray & Selected Stone Panel -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left: Inventory Trays (7 Cols) -->
+        <div class="lg:col-span-7 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-3 min-h-[420px] flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center text-xs font-mono text-boneMuted border-b border-slateBorder pb-2 mb-3">
+              <span>Parcel Slots in Tray</span>
+              <span id="vault-total-equity">Vault Inventory Value: $0</span>
+            </div>
+
+            <div id="vault-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[400px] overflow-y-auto pr-1">
+              <!-- Dynamically populated gemstone cards -->
+            </div>
+          </div>
+
+          <div class="text-[11px] font-serif italic text-boneMuted border-t border-slateBorder pt-2 text-center">
+            "Fine gems are capital preserved in crystallized light." — Antwerp Guild Maxim
+          </div>
+        </div>
+
+        <!-- Right: Detail / Action Studio (5 Cols) -->
+        <div class="lg:col-span-5 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-4 shadow-sm flex flex-col justify-between">
+          <div id="vault-detail-empty" class="text-center py-16 space-y-2 text-boneMuted">
+            <div class="text-3xl">◆</div>
+            <p class="font-serif italic text-sm">Select a parcel from your vault tray to inspect, recut, or dispatch for grading.</p>
+          </div>
+
+          <div id="vault-detail-content" class="space-y-4 hidden">
+            <!-- Selected Stone Header -->
+            <div class="border-b border-slateBorder pb-3">
+              <span id="vdet-type" class="text-[10px] font-mono uppercase tracking-widest text-boneMuted">NATURAL DIAMOND</span>
+              <h3 id="vdet-title" class="font-serif font-bold text-xl text-bonePaper">1.84 ct Round Brilliant</h3>
+              <div class="flex items-center gap-2 mt-1">
+                <span id="vdet-cert-pill" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted">Uncertified</span>
+                <span id="vdet-treatment-pill" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted">Natural</span>
+              </div>
+            </div>
+
+            <!-- Specifications Table -->
+            <div class="bg-soot p-3 rounded border border-slateBorder text-xs font-mono space-y-1.5">
+              <div class="flex justify-between">
+                <span class="text-boneMuted">Weight / Carat:</span>
+                <span id="vdet-weight" class="font-bold text-boneLight">1.84 ct</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-boneMuted">Color / Tone:</span>
+                <span id="vdet-color" class="font-bold text-boneLight">D (Colorless)</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-boneMuted">Clarity Grade:</span>
+                <span id="vdet-clarity" class="font-bold text-boneLight">VVS2</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-boneMuted">Cut Symmetry:</span>
+                <span id="vdet-cut" class="font-bold text-boneLight">Ideal</span>
+              </div>
+              <div class="flex justify-between pt-1 border-t border-slateBorder/60">
+                <span class="text-boneMuted">Acquisition Basis:</span>
+                <span id="vdet-cost" class="text-boneMuted">$7,200</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-boneMuted">Estimated Resale:</span>
+                <span id="vdet-est-value" class="font-bold text-bonePaper">$11,400</span>
+              </div>
+            </div>
+
+            <!-- Studio Services -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-display uppercase tracking-wider text-boneMuted">Wholesale Services</h4>
+              
+              <!-- Service 1: Grading Lab Certification -->
+              <div class="bg-soot p-2.5 rounded border border-slateBorder flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-mono font-bold text-bonePaper">Lab Certification Docket</div>
+                  <div class="text-[10px] text-boneMuted font-mono">Confirms specs + unlocks +30% buyer premium. Cost: $400</div>
+                </div>
+                <button id="btn-certify-stone" class="px-2.5 py-1 bg-charcoal hover:bg-slateDark border border-slateBorder text-xs font-mono text-boneLight rounded">
+                  Submit ($400)
+                </button>
+              </div>
+
+              <!-- Service 2: Lapidary Re-cutting Bench -->
+              <div class="bg-soot p-2.5 rounded border border-slateBorder space-y-2">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="text-xs font-mono font-bold text-bonePaper">Lapidary Re-cutting Wheel</div>
+                    <div class="text-[10px] text-boneMuted font-mono">Excise inclusions to raise clarity grade (-15% Carat wt). Cost: $650</div>
+                  </div>
+                  <button id="btn-recut-stone" class="px-2.5 py-1 bg-charcoal hover:bg-slateDark border border-slateBorder text-xs font-mono text-boneLight rounded">
+                    Recut ($650)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mount in Loupe -->
+            <button id="btn-mount-from-vault" class="w-full py-2 bg-bonePaper hover:bg-white text-soot font-display font-bold text-xs uppercase tracking-wider rounded transition">
+              Inspect on Loupe Bench 🔍
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 4: B2B COMMISSIONS, SHOWROOM & MEMO BOARD -->
+    <section id="view-market" class="space-y-4 hidden">
+      <div class="border-b border-slateBorder pb-2 flex justify-between items-center">
+        <div>
+          <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">Wholesale B2B Showroom & Commissions</h2>
+          <p class="text-xs font-serif italic text-boneMuted">Fulfill bespoke atelier orders or memo gems to top jewelry houses.</p>
+        </div>
+        <div class="font-mono text-xs text-boneMuted">
+          Atelier Liquidity: <span class="text-bonePaper font-bold">Active</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left: Open B2B Orders / Request Dockets (7 Cols) -->
+        <div class="lg:col-span-7 space-y-3">
+          <div class="flex justify-between items-center text-xs font-mono text-boneMuted">
+            <span>High Jewelry House Dockets</span>
+            <span>Bounties & Deadlines</span>
+          </div>
+
+          <div id="dockets-container" class="space-y-2.5">
+            <!-- Dynamically generated atelier requests -->
+          </div>
+        </div>
+
+        <!-- Right: Open Wholesale Memo Flipping Terminal (5 Cols) -->
+        <div class="lg:col-span-5 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-4 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-display font-semibold text-xs uppercase tracking-wider text-bonePaper border-b border-slateBorder pb-2">
+              Wholesale Memo Desk
+            </h3>
+            <p class="text-xs font-serif italic text-boneMuted mt-1">
+              Need immediate cash flow? Liquidate any parcel to Antwerp sight-holders at prevailing spot discount (80% of wholesale benchmark).
+            </p>
+
+            <div class="mt-4 space-y-2">
+              <label for="liquidate-select" class="text-xs font-mono text-boneMuted block">Choose Parcel to Liquidate:</label>
+              <select id="liquidate-select" class="w-full bg-soot border border-slateBorder rounded p-2 text-xs font-mono text-bonePaper focus:outline-none focus:border-boneLight">
+                <option value="">-- No Vault Gems Available --</option>
+              </select>
+            </div>
+
+            <div id="liquidation-summary" class="mt-4 bg-soot p-3 rounded border border-slateBorder text-xs font-mono space-y-1 hidden">
+              <div class="flex justify-between text-boneMuted">
+                <span>Fair Market Baseline:</span>
+                <span id="liq-market-val">$0</span>
+              </div>
+              <div class="flex justify-between text-boneMuted">
+                <span>Sight-holder Discount:</span>
+                <span class="text-boneMuted">-20% Spot</span>
+              </div>
+              <div class="flex justify-between pt-1 border-t border-slateBorder font-bold text-bonePaper text-sm">
+                <span>Immediate Wire Payout:</span>
+                <span id="liq-payout-val">$0</span>
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-execute-liquidation" disabled class="w-full py-2.5 bg-slateDark border border-slateBorder text-boneMuted rounded font-display text-xs uppercase tracking-wider transition disabled:opacity-50">
+            Execute Wholesale Liquidation
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 5: LEDGER, REPUTATION & EQUIPMENT UPGRADES -->
+    <section id="view-ledger" class="space-y-4 hidden">
+      <div class="border-b border-slateBorder pb-2">
+        <h2 class="font-display font-semibold text-lg tracking-wider text-bonePaper">Exchange Ledger & Equipment Upgrades</h2>
+        <p class="text-xs font-serif italic text-boneMuted">Acquire precision laboratory apparatus to enhance evaluation and expand high-net-worth rolodex.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left: Equipment Upgrades (7 Cols) -->
+        <div class="lg:col-span-7 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-3 shadow-sm">
+          <h3 class="font-display font-semibold text-xs uppercase tracking-wider text-bonePaper border-b border-slateBorder pb-2">
+            Gemological Equipment & Guild Accreditation
+          </h3>
+
+          <div id="upgrades-list" class="space-y-2.5">
+            <!-- Upgrade Cards -->
+          </div>
+        </div>
+
+        <!-- Right: Financial History Log (5 Cols) -->
+        <div class="lg:col-span-5 bg-charcoal p-4 rounded-lg border border-slateBorder space-y-3 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-display font-semibold text-xs uppercase tracking-wider text-bonePaper border-b border-slateBorder pb-2">
+              Accounting Transaction Blotter
+            </h3>
+            <div id="ledger-history-box" class="h-80 overflow-y-auto space-y-2 text-xs font-mono pr-1 mt-2">
+              <!-- Dynamically populated transaction logs -->
+            </div>
+          </div>
+
+          <div class="border-t border-slateBorder pt-3 flex justify-between text-xs font-mono text-boneMuted">
+            <span>Guild License #448-GIA</span>
+            <span>Audited & Certified</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FIXED BOTTOM DOCK NAVIGATION (iOS Farmhouse Monolith Aesthetic) -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-charcoal/95 backdrop-blur border-t border-slateBorder px-2 py-2">
+    <div class="max-w-md mx-auto grid grid-cols-5 gap-1 text-center font-display text-[10px] tracking-wider uppercase">
+      
+      <!-- Tab 1: Loupe -->
+      <button data-tab="view-bench" class="nav-tab-btn active p-2 rounded flex flex-col items-center justify-center transition bg-bonePaper text-soot font-bold">
+        <span class="text-xs mb-0.5">🔍</span>
+        <span>Loupe</span>
+      </button>
+
+      <!-- Tab 2: Negotiation -->
+      <button data-tab="view-negotiation" class="nav-tab-btn p-2 rounded flex flex-col items-center justify-center transition text-boneMuted hover:text-bonePaper hover:bg-slateDark">
+        <span class="text-xs mb-0.5">⚖</span>
+        <span>Bargain</span>
+      </button>
+
+      <!-- Tab 3: Vault -->
+      <button data-tab="view-vault" class="nav-tab-btn p-2 rounded flex flex-col items-center justify-center transition text-boneMuted hover:text-bonePaper hover:bg-slateDark relative">
+        <span class="text-xs mb-0.5">🔒</span>
+        <span>Vault</span>
+        <span id="badge-vault-count" class="absolute top-1 right-2 w-4 h-4 rounded-full bg-soot border border-slateBorder text-[8px] font-mono flex items-center justify-center text-bonePaper">0</span>
+      </button>
+
+      <!-- Tab 4: Market / Dockets -->
+      <button data-tab="view-market" class="nav-tab-btn p-2 rounded flex flex-col items-center justify-center transition text-boneMuted hover:text-bonePaper hover:bg-slateDark">
+        <span class="text-xs mb-0.5">🏛</span>
+        <span>B2B</span>
+      </button>
+
+      <!-- Tab 5: Ledger / Upgrades -->
+      <button data-tab="view-ledger" class="nav-tab-btn p-2 rounded flex flex-col items-center justify-center transition text-boneMuted hover:text-bonePaper hover:bg-slateDark">
+        <span class="text-xs mb-0.5">📋</span>
+        <span>Ledger</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- CUSTOM MODAL / NOTIFICATION OVERLAY (NO native alerts) -->
+  <div id="modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-charcoal border border-slateBorder max-w-sm w-full rounded-lg p-5 shadow-2xl space-y-4">
+      <div class="flex items-center space-x-2 border-b border-slateBorder pb-2">
+        <span class="font-display text-sm text-bonePaper">◆ NOTICE</span>
+        <h3 id="modal-title" class="font-display font-semibold text-sm text-bonePaper tracking-wider">Exchange Notification</h3>
+      </div>
+      <p id="modal-message" class="text-xs font-serif text-boneLight leading-relaxed">
+        Details regarding the transaction will be displayed here.
+      </p>
+      <div class="flex justify-end pt-2">
+        <button id="modal-close" class="px-4 py-1.5 bg-bonePaper hover:bg-white text-soot font-display font-bold text-xs uppercase tracking-wider rounded transition">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE GUILD FIELD MANUAL & GEMOLOGICAL COMPENDIUM -->
+  <div id="manual-modal-backdrop" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 md:p-6 hidden">
+    <div class="bg-charcoal border border-slateBorder max-w-4xl w-full h-[90vh] rounded-lg shadow-2xl flex flex-col overflow-hidden">
+      
+      <!-- Manual Top Bar -->
+      <div class="px-4 py-3 border-b border-slateBorder bg-soot flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-6 h-6 rounded border border-slateBorder bg-charcoal flex items-center justify-center font-display text-[10px] text-boneLight">
+            📖
+          </span>
+          <div>
+            <h2 class="font-display font-bold text-xs md:text-sm uppercase tracking-wider text-bonePaper">
+              Antwerp Guild Field Manual & Gemological Compendium
+            </h2>
+            <p class="font-mono text-[9px] text-boneMuted">
+              Edition IV • Certified Valuation, Diagnostic Inspection & Bourse Guidelines
+            </p>
+          </div>
+        </div>
+        <button id="btn-close-manual" class="w-7 h-7 rounded border border-slateBorder bg-charcoal hover:bg-slateDark text-boneMuted hover:text-bonePaper flex items-center justify-center font-mono text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Manual Navigation Sub-Header -->
+      <div class="bg-charcoal border-b border-slateBorder px-3 py-2 flex items-center gap-1 md:gap-2 overflow-x-auto font-mono text-[11px]">
+        <button data-manual-tab="mtab-intro" class="manual-nav-btn active px-3 py-1 rounded bg-bonePaper text-soot font-bold whitespace-nowrap">
+          I. Foundations & Loop
+        </button>
+        <button data-manual-tab="mtab-4cs" class="manual-nav-btn px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper whitespace-nowrap">
+          II. The 4 C's & Cuts
+        </button>
+        <button data-manual-tab="mtab-phenom" class="manual-nav-btn px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper whitespace-nowrap">
+          III. Phenomena & Inclusions
+        </button>
+        <button data-manual-tab="mtab-nego" class="manual-nav-btn px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper whitespace-nowrap">
+          IV. Bourse & Rapaport
+        </button>
+        <button data-manual-tab="mtab-lapidary" class="manual-nav-btn px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper whitespace-nowrap">
+          V. Studio & Commissions
+        </button>
+      </div>
+
+      <!-- Manual Body Viewports (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 text-xs font-serif text-boneLight leading-relaxed selection:bg-bonePaper selection:text-soot">
+        
+        <!-- SECTION I: FOUNDATIONS & GAMEPLAY LOOP -->
+        <div id="mtab-intro" class="manual-tab-page space-y-4">
+          <div class="border-b border-slateBorder/60 pb-3">
+            <h3 class="font-display font-bold text-base text-bonePaper uppercase tracking-wider">
+              Chapter I: The Merchant's Operational Cycle
+            </h3>
+            <p class="italic text-boneMuted text-[11px]">
+              "A gem merchant is neither gambler nor miner; they are an arbiter of physics, light, and market urgency."
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-xs">
+            <div class="bg-soot p-3 rounded border border-slateBorder space-y-1">
+              <span class="text-bonePaper font-bold block text-[11px]">1. SOURCING & BENCH</span>
+              <p class="text-boneMuted text-[10px] font-serif leading-normal">
+                Runners and liquidators arrive with uninspected parcels. Before bidding, inspect stones on the 10× loupe bench, calibrate focal depth to count inclusions, verify weight on the micro-scale, and test light reactions.
+              </p>
+            </div>
+            <div class="bg-soot p-3 rounded border border-slateBorder space-y-1">
+              <span class="text-bonePaper font-bold block text-[11px]">2. BARGAIN & SPREAD</span>
+              <p class="text-boneMuted text-[10px] font-serif leading-normal">
+                Compare the runner's asking price against the wholesale Rapaport benchmark. Use counter-offers to discover their floor price without depleting their patience meter to zero.
+              </p>
+            </div>
+            <div class="bg-soot p-3 rounded border border-slateBorder space-y-1">
+              <span class="text-bonePaper font-bold block text-[11px]">3. VALUE-ADD & EXIT</span>
+              <p class="text-boneMuted text-[10px] font-serif leading-normal">
+                Hold stones in your vault tray, invest $400 in GIA certificates to gain a +30% buyer premium, recut flawed stones on the lapidary wheel, and fulfill bespoke high-jewelry atelier dockets for maximum profit.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+            <h4 class="font-display font-semibold text-xs text-bonePaper uppercase tracking-wider">
+              Essential Keyboard & Interface Controls
+            </h4>
+            <ul class="list-disc list-inside space-y-1 text-boneMuted text-[11px] font-mono">
+              <li><strong class="text-boneLight">Interactive Loupe Canvas:</strong> Click and drag across the stone to rotate the light reflection arc in 360 degrees.</li>
+              <li><strong class="text-boneLight">Focal Depth Slider:</strong> Slices optical focus from crown table (0-30%) down to internal culet & pavilion (70-100%) to locate obscured inclusions.</li>
+              <li><strong class="text-boneLight">Light Mode Toggle:</strong> Instantly switch between 5500K daylight, 2700K incandescent tungsten, and Darkfield/UV.</li>
+              <li><strong class="text-boneLight">Tare Scale:</strong> Zeros your micro-scale balance to observe pure carat weight and specific gravity (density).</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SECTION II: THE 4 C's & CUT GEOMETRY -->
+        <div id="mtab-4cs" class="manual-tab-page space-y-5 hidden">
+          <div class="border-b border-slateBorder/60 pb-3">
+            <h3 class="font-display font-bold text-base text-bonePaper uppercase tracking-wider">
+              Chapter II: Gemological Master Criteria (The 4 C's)
+            </h3>
+            <p class="italic text-boneMuted text-[11px]">
+              Universal grading standards formulated by the Gemological Institute of America (GIA).
+            </p>
+          </div>
+
+          <!-- Carat & Cut -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <h4 class="font-display text-xs text-bonePaper uppercase tracking-wider">1. Carat (Mass & Weight Cliffs)</h4>
+              <p class="text-[11px] leading-relaxed">
+                One metric carat equals <span class="font-mono text-boneLight">200 milligrams (0.200 grams)</span>. Diamonds and colored gemstones do not appreciate linearly with weight; they scale exponentially.
+              </p>
+              <div class="p-2 rounded bg-charcoal border border-slateBorder/60 text-[10px] font-mono space-y-1">
+                <div><strong class="text-boneLight">Specific Gravities:</strong></div>
+                <div class="flex justify-between text-boneMuted"><span>• Diamond:</span><span class="text-boneLight">3.52 g/cm³</span></div>
+                <div class="flex justify-between text-boneMuted"><span>• Sapphire (Corundum):</span><span class="text-boneLight">4.00 g/cm³ (heavier)</span></div>
+                <div class="flex justify-between text-boneMuted"><span>• Alexandrite (Chrysoberyl):</span><span class="text-boneLight">3.73 g/cm³</span></div>
+              </div>
+            </div>
+
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <h4 class="font-display text-xs text-bonePaper uppercase tracking-wider">2. Cut & Proportion Physics</h4>
+              <p class="text-[11px] leading-relaxed">
+                Cut defines how light refracts internally rather than leaking through the pavilion (extinction). 
+              </p>
+              <ul class="text-[10px] font-mono text-boneMuted space-y-1 list-disc list-inside">
+                <li><strong class="text-boneLight">Table Percentage (54-62%):</strong> Ratio of the top flat facet to overall stone diameter.</li>
+                <li><strong class="text-boneLight">Depth Percentage (60-62.5%):</strong> Ideal range for total internal reflection in brilliant cuts.</li>
+                <li><strong class="text-boneLight">Shapes:</strong> Round Brilliant (highest fire), Step Emerald (parallel hall-of-mirrors), Cushion (soft pillow corners), Oval, and Pear.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Color & Clarity -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <h4 class="font-display text-xs text-bonePaper uppercase tracking-wider">3. Color Tiers (D through J + Fancy)</h4>
+              <p class="text-[11px] leading-relaxed">
+                White diamonds are evaluated by absence of body color. Fancy colored diamonds (Pinks, Canaries) and Corundum reverse this: vivid saturation commands astronomical premiums.
+              </p>
+              <div class="grid grid-cols-4 gap-1 text-[9px] font-mono text-center pt-1">
+                <div class="p-1 bg-charcoal rounded border border-slateBorder"><strong class="text-bonePaper block">D - F</strong>Colorless</div>
+                <div class="p-1 bg-charcoal rounded border border-slateBorder"><strong class="text-bonePaper block">G - H</strong>Near Clear</div>
+                <div class="p-1 bg-charcoal rounded border border-slateBorder"><strong class="text-bonePaper block">I - J</strong>Faint Tint</div>
+                <div class="p-1 bg-charcoal rounded border border-slateBorder"><strong class="text-bonePaper block">Fancy</strong>Pink/Canary</div>
+              </div>
+            </div>
+
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <h4 class="font-display text-xs text-bonePaper uppercase tracking-wider">4. Clarity Scale (Internal Inclusions)</h4>
+              <p class="text-[11px] leading-relaxed">
+                Examined at 10× optical magnification. Internal imperfections diminish light travel and structural integrity.
+              </p>
+              <div class="space-y-1 text-[10px] font-mono text-boneMuted">
+                <div><span class="text-bonePaper font-bold">FL / IF:</span> Flawless. Zero inclusions visible under 10×.</div>
+                <div><span class="text-bonePaper font-bold">VVS1 - VVS2:</span> Extremely minute pinpoints; difficult for master graders to find.</div>
+                <div><span class="text-bonePaper font-bold">VS1 - VS2:</span> Minor crystals or feathers off-table; eye-clean to clients.</div>
+                <div><span class="text-bonePaper font-bold">SI1 - SI2:</span> Noticeable inclusions under 10×; visible to trained naked eye.</div>
+                <div><span class="text-bonePaper font-bold">I1:</span> Prominent cleavage fissures that jeopardize stone durability.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION III: OPTICAL PHENOMENA & INCLUSIONS -->
+        <div id="mtab-phenom" class="manual-tab-page space-y-5 hidden">
+          <div class="border-b border-slateBorder/60 pb-3">
+            <h3 class="font-display font-bold text-base text-bonePaper uppercase tracking-wider">
+              Chapter III: Optical Phenomena & Micro-Inclusions
+            </h3>
+            <p class="italic text-boneMuted text-[11px]">
+              Differentiating unheated natural gemstones from treated goods using the bench's spectral light switches.
+            </p>
+          </div>
+
+          <div class="space-y-3 font-mono text-xs">
+            <!-- Alexandrite -->
+            <div class="p-3 bg-soot rounded border border-slateBorder space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-display font-bold text-bonePaper">Natural Alexandrite: The Color-Change Miracle</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-charcoal text-boneLight border border-slateBorder">Pleochroic Shift</span>
+              </div>
+              <p class="font-serif text-[11px] text-boneMuted leading-relaxed">
+                Chromium ($Cr^{3+}$) ions in the chrysoberyl lattice have balanced transmission windows in green and red wavelengths. 
+              </p>
+              <div class="grid grid-cols-2 gap-2 text-[10px]">
+                <div class="p-2 rounded bg-charcoal border border-slateBorder">
+                  <strong class="text-boneLight block">5500K Daylight:</strong>
+                  Rich in blue-green wavelengths. The stone transmits peacock teal-green.
+                </div>
+                <div class="p-2 rounded bg-charcoal border border-slateBorder">
+                  <strong class="text-boneLight block">2700K Incandescent Lamp:</strong>
+                  Rich in warm red wavelengths. The stone shifts to vibrant raspberry-rhodolite red.
+                </div>
+              </div>
+            </div>
+
+            <!-- Sapphire Rutile Silk -->
+            <div class="p-3 bg-soot rounded border border-slateBorder space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-display font-bold text-bonePaper">Unheated Ceylon Sapphires: Rutile Silk Needles</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-charcoal text-boneLight border border-slateBorder">Darkfield Diagnostics</span>
+              </div>
+              <p class="font-serif text-[11px] text-boneMuted leading-relaxed">
+                Natural untreated corundum crystallizes with fine microscopic needles of titanium dioxide (Rutile, $TiO_2$) that intersect at exact <strong class="text-boneLight">60° angles</strong>. 
+                Under 10× darkfield illumination, unbroken needles prove the gem was never heat-treated, immediately increasing wholesale market value by 60%!
+              </p>
+            </div>
+
+            <!-- Inclusion Plotting Anatomy -->
+            <div class="p-3 bg-soot rounded border border-slateBorder space-y-2">
+              <span class="font-display font-bold text-bonePaper block">Types of Internal Flaws Under the Loupe</span>
+              <div class="grid grid-cols-3 gap-2 text-[10px]">
+                <div class="p-2 rounded bg-charcoal border border-slateBorder">
+                  <strong class="text-bonePaper block">Pinpoints (White dots)</strong>
+                  Microscopic mineral crystals or gas bubbles suspended in the matrix.
+                </div>
+                <div class="p-2 rounded bg-charcoal border border-slateBorder">
+                  <strong class="text-bonePaper block">Feathers (White lines)</strong>
+                  Internal stress cracks or cleavage lines. Risky if they reach the girdle.
+                </div>
+                <div class="p-2 rounded bg-charcoal border border-slateBorder">
+                  <strong class="text-bonePaper block">Crystals (Dark squares)</strong>
+                  Foreign mineral deposits (e.g. garnet or diopside) trapped during formation.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION IV: BOURSE & RAPAPORT NEGOTIATION -->
+        <div id="mtab-nego" class="manual-tab-page space-y-5 hidden">
+          <div class="border-b border-slateBorder/60 pb-3">
+            <h3 class="font-display font-bold text-base text-bonePaper uppercase tracking-wider">
+              Chapter IV: Bourse Pricing & Bargaining Psychology
+            </h3>
+            <p class="italic text-boneMuted text-[11px]">
+              Mastering the spread between broker asking prices and the wholesale Rapaport benchmark.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <h4 class="font-display text-xs text-bonePaper uppercase tracking-wider">The Rapaport Price List Standard</h4>
+              <p class="text-[11px] leading-relaxed">
+                The global diamond trade relies on benchmark matrices cross-referencing Carat, Color, and Clarity. In Carat & Cleft:
+              </p>
+              <div class="bg-charcoal p-2 rounded border border-slateBorder font-mono text-[10px] space-y-1 text-boneMuted">
+                <div><span class="text-boneLight">Benchmark Value</span> = Base Rate × Carat × (Carat ^ 1.35)</div>
+                <div>• Rare colors and unheated natural varieties add exponential multipliers.</div>
+                <div>• Certified parcels trade at a strict <strong class="text-bonePaper">+30% premium</strong> over uncertified rough.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
+              <div class="bg-soot p-3 rounded border border-slateBorder space-y-1.5">
+                <span class="font-display font-bold text-bonePaper block text-[11px]">Managing Seller Patience</span>
+                <p class="font-serif text-[10px] text-boneMuted leading-normal">
+                  Each runner has a hidden floor price (typically 80-90% of wholesale). If you make an insulting lowball bid (&lt; 55% of their floor), they lose 40% patience immediately. Make shrewd counter-offers (-15% to -25%) to force concessions without causing a walkout.
+                </p>
+              </div>
+
+              <div class="bg-soot p-3 rounded border border-slateBorder space-y-1.5">
+                <span class="font-display font-bold text-bonePaper block text-[11px]">Broker Archetypes</span>
+                <p class="font-serif text-[10px] text-boneMuted leading-normal">
+                  <strong class="text-boneLight">Mme. Corbeau:</strong> Estate liquidator needing fast bank funds. Firm but negotiable.<br>
+                  <strong class="text-boneLight">Tariq:</strong> Antwerp sight-holder who knows exact Rapaport quotes.<br>
+                  <strong class="text-boneLight">Devon:</strong> Ceylon specialist carrying untreated silk sapphires.<br>
+                  <strong class="text-boneLight">Oleg:</strong> Russian Ural collector trading priceless color-change Alexandrite.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION V: STUDIO SERVICES & COMMISSIONS -->
+        <div id="mtab-lapidary" class="manual-tab-page space-y-5 hidden">
+          <div class="border-b border-slateBorder/60 pb-3">
+            <h3 class="font-display font-bold text-base text-bonePaper uppercase tracking-wider">
+              Chapter V: The Lapidary Studio & Atelier Commissions
+            </h3>
+            <p class="italic text-boneMuted text-[11px]">
+              Turning raw acquisitions into blue-chip assets through re-cutting, lab grading, and bespoke commissions.
+            </p>
+          </div>
+
+          <div class="space-y-3 font-mono text-xs">
+            <!-- Recutting -->
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-display font-bold text-bonePaper">Lapidary Re-cutting Wheel ($650 Fee)</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-charcoal text-boneLight border border-slateBorder">Clarity Enhancement</span>
+              </div>
+              <p class="font-serif text-[11px] text-boneMuted leading-relaxed">
+                When a stone has severe internal cleavage feathers or surface pinpoints (e.g. SI1 or I1 grade), you can commission your lapidary wheel to polish them away.
+              </p>
+              <div class="p-2 rounded bg-charcoal border border-slateBorder text-[10px] space-y-1 text-boneMuted">
+                <div>• <strong class="text-boneLight">Tradeoff:</strong> Sacrifices approximately <span class="text-bonePaper font-bold">12% to 20% carat weight</span>.</div>
+                <div>• <strong class="text-boneLight">Reward:</strong> Promotes clarity by <span class="text-bonePaper font-bold">+1 full grade</span> (e.g., SI1 → VS2) and resets cut proportions to <span class="text-boneLight">Ideal</span>.</div>
+              </div>
+            </div>
+
+            <!-- GIA Lab Certification -->
+            <div class="bg-soot p-3.5 rounded border border-slateBorder space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-display font-bold text-bonePaper">Laboratory Certification ($400 Fee)</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-charcoal text-boneLight border border-slateBorder">+30% Equity</span>
+              </div>
+              <p class="font-serif text-[11px] text-boneMuted leading-relaxed">
+                Submits an uncertified parcel to the institute for laser inscription and report issuance. Certified stones automatically command an immediate 30% resale markup across wholesale channels.
+              </p>
+            </div>
+
+            <!-- B2B Commissions vs Spot Memo -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="p-3 rounded bg-soot border border-slateBorder space-y-1">
+                <strong class="text-bonePaper block font-display text-[11px]">B2B Atelier Dockets</strong>
+                <p class="font-serif text-[10px] text-boneMuted leading-relaxed">
+                  Houses like Van Cleef, Cartier, and Mayfair ateliers post bespoke criteria. Fulfilling these requests yields massive premiums and adds +40 Exchange Prestige toward sight-holder status.
+                </p>
+              </div>
+
+              <div class="p-3 rounded bg-soot border border-slateBorder space-y-1">
+                <strong class="text-bonePaper block font-display text-[11px]">Wholesale Memo Liquidation</strong>
+                <p class="font-serif text-[10px] text-boneMuted leading-relaxed">
+                  Facing a capital crunch? Liquidate any parcel immediately at an 80% spot discount to Antwerp bourse dealers for instant wire settlement.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Manual Footer -->
+      <div class="p-3 border-t border-slateBorder bg-soot flex items-center justify-between font-mono text-[10px] text-boneMuted">
+        <span>Antwerp High Diamond Council • Guild Manual v4.2</span>
+        <button id="btn-manual-got-it" class="px-4 py-1.5 rounded bg-bonePaper hover:bg-white text-soot font-display font-bold uppercase tracking-wider text-xs transition">
+          Return to Bench
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    /* =========================================================================
+       AUDIO SYNTHESIS SYSTEM (Web Audio API - No external assets)
+       ========================================================================= */
+    const SoundFX = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+      // Subtle metallic tweezers ring (resonant ping)
+      tweezerPing() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(2850, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1400, this.ctx.currentTime + 0.4);
+          
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.5);
+          
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.5);
+        } catch(e) {}
+      },
+      // Lens focus click
+      loupeClick() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(900, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.08);
+
+          gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.08);
+        } catch(e) {}
+      },
+      // Scale tare beep
+      scaleBeep() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1800, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      },
+      // Cash ledger stamp
+      cashStamp() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(80, now + 0.15);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(now + 0.2);
+        } catch(e) {}
+      },
+      // Lapidary wheel grinding hum
+      grindLapidary() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(420, now);
+          osc.frequency.linearRampToValueAtTime(680, now + 0.3);
+          osc.frequency.linearRampToValueAtTime(320, now + 0.6);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(now + 0.7);
+        } catch(e) {}
+      }
+    };
+
+    /* =========================================================================
+       DATA MODELS & STATE MANAGEMENT
+       ========================================================================= */
+    const UPGRADES_CONFIG = [
+      {
+        id: 'scale_mk2',
+        name: 'Mettler Micro-Analytical Balance',
+        desc: 'Measures to 4 decimal places. Accurately determines precise specific gravity and diamond density tiers.',
+        cost: 2500,
+        purchased: false
+      },
+      {
+        id: 'darkfield_lens',
+        name: 'Schneider Kreuznach 10× Darkfield Loupe',
+        desc: 'Aplanatic-achromatic optics. Reveals microscopic inclusions, pinpoint clouds, and natural sapphire silk.',
+        cost: 4200,
+        purchased: false
+      },
+      {
+        id: 'lapidary_bench',
+        name: 'High-Torque Diamond Faceting Wheel',
+        desc: 'Enables high-yield re-cutting bench in the vault to polish away severe feathers and raise clarity grades.',
+        cost: 7500,
+        purchased: false
+      },
+      {
+        id: 'vip_rolodex',
+        name: 'Place Vendôme Private Brokerage Rolodex',
+        desc: 'Unlocks tier-one bespoke dockets with Cartier, Harry Winston, and Geneva auction specialists paying 40% markup.',
+        cost: 12000,
+        purchased: false
+      }
+    ];
+
+    const RUNNER_ARCHETYPES = [
+      {
+        name: 'Mme. Geneviève Corbeau',
+        title: 'Estate Liquidator • Paris / Geneva',
+        avatar: 'GC',
+        dialogues: {
+          intro: "This parcel originates from an old Normandy estate lockbox. The heirs require immediate bank settlement.",
+          counterLow: "You wound me. I am liquidating a dynasty's heirloom, not peddling river gravel.",
+          counterFair: "You drive an austere bargain. Come closer to my floor and we may shake hands.",
+          accept: "A fair transaction. I shall draft the transfer voucher at once.",
+          walkout: "Enough insult for one afternoon. My car is waiting."
+        },
+        patience: 100,
+        greed: 1.15
+      },
+      {
+        name: 'Tariq Al-Mansoor',
+        title: 'Antwerp Rough Cutter & Sight-Holder',
+        avatar: 'TA',
+        dialogues: {
+          intro: "Fresh off the parcel flight from Gaborone. Exceptional crystal structure, untreated and unheated.",
+          counterLow: "My friend, Rapaport lists this baseline twice as high. Do not treat me as an apprentice.",
+          counterFair: "You have a sharp eye for clefts. Let us meet halfway.",
+          accept: "Done. May the stone bring great fire to your showroom.",
+          walkout: "I have meetings at the Diamond Bourse. Good day."
+        },
+        patience: 100,
+        greed: 1.25
+      },
+      {
+        name: 'Devon Vance',
+        title: 'Artisanal Ceylon Gem Hunter',
+        avatar: 'DV',
+        dialogues: {
+          intro: "Direct from the alluvial gravels of Ratnapura. Unheated natural silk needles with phenomenal saturation.",
+          counterLow: "Heat-treated synthetics sell for more in Colombo! Be serious.",
+          counterFair: "I respect a wholesaler who knows their margins. We can negotiate.",
+          accept: "The parcel is yours. Wire the funds to my Colombo account.",
+          walkout: "I am taking this parcel to Sotheby's instead."
+        },
+        patience: 100,
+        greed: 1.20
+      },
+      {
+        name: 'Oleg Voronin',
+        title: 'Ural Collector & Alexandrite Specialist',
+        avatar: 'OV',
+        dialogues: {
+          intro: "Look at this Russian chrysoberyl. Teal peacock in daylight, pure raspberry under tungsten. A true miracle.",
+          counterLow: "Alexandrite of this color change cannot be replaced. Your offer is absurd.",
+          counterFair: "You know the rarity. Shave a few hundred off and we close.",
+          accept: "Agreed. Treasure this stone; you will not see another like it this decade.",
+          walkout: "Nyet. This stays in my private vault."
+        },
+        patience: 100,
+        greed: 1.30
+      }
+    ];
+
+    const DEFAULT_DOCKETS = [
+      {
+        id: 'doc_1',
+        client: 'Van Cleef & Arpels Atelier',
+        requirement: 'White Diamond • Round Brilliant • 1.50+ ct • Color D-F • Clarity VS1+',
+        reward: 18500,
+        check: (gem) => gem.type === 'Diamond' && gem.variety === 'Natural Diamond (White)' && gem.shape === 'Round' && gem.carat >= 1.50 && ['D', 'E', 'F'].includes(gem.color) && ['FL', 'VVS1', 'VVS2', 'VS1'].includes(gem.clarity)
+      },
+      {
+        id: 'doc_2',
+        client: 'Geneva Private Auction Runner',
+        requirement: 'Natural Alexandrite • 1.00+ ct • Color Shift > 75%',
+        reward: 16800,
+        check: (gem) => gem.type === 'Alexandrite' && gem.carat >= 1.00 && gem.colorChangePct >= 75
+      },
+      {
+        id: 'doc_3',
+        client: 'Mayfair Bespoke Ring Studio',
+        requirement: 'Ceylon Sapphire • 2.00+ ct • Unheated Natural Silk • Cushion or Oval',
+        reward: 13200,
+        check: (gem) => gem.type === 'Sapphire' && gem.carat >= 2.00 && gem.treatment === 'Natural Unheated' && ['Cushion', 'Oval'].includes(gem.shape)
+      }
+    ];
+
+    // Global Game State
+    let Game = {
+      capital: 18500,
+      reputation: 120,
+      day: 1,
+      vault: [],
+      upgrades: JSON.parse(JSON.stringify(UPGRADES_CONFIG)),
+      dockets: [...DEFAULT_DOCKETS],
+      activeStone: null,       // Currently mounted on loupe
+      activeSeller: null,      // Current seller in negotiation
+      selectedVaultStone: null,// Selected stone in Vault tab
+      logs: [],
+
+      // Save to localStorage
+      save() {
+        try {
+          const payload = {
+            capital: this.capital,
+            reputation: this.reputation,
+            day: this.day,
+            vault: this.vault,
+            upgrades: this.upgrades,
+            logs: this.logs
+          };
+          localStorage.setItem('CARAT_CLEFT_SAVE_V1', JSON.stringify(payload));
+        } catch(e) {}
+      },
+
+      // Load from localStorage
+      load() {
+        try {
+          const raw = localStorage.getItem('CARAT_CLEFT_SAVE_V1');
+          if (raw) {
+            const data = JSON.parse(raw);
+            this.capital = data.capital || 18500;
+            this.reputation = data.reputation || 120;
+            this.day = data.day || 1;
+            this.vault = data.vault || [];
+            if (data.upgrades) this.upgrades = data.upgrades;
+            this.logs = data.logs || [];
+          }
+        } catch(e) {}
+      }
+    };
+
+    /* =========================================================================
+       PROCEDURAL GEMSTONE GENERATOR
+       ========================================================================= */
+    const GemFactory = {
+      shapes: ['Round', 'Emerald', 'Cushion', 'Oval', 'Pear'],
+      clarities: ['FL', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1'],
+      diamondColors: ['D', 'E', 'F', 'G', 'H', 'I', 'J'],
+
+      createRandomGem() {
+        const rand = Math.random();
+        let type, variety;
+        if (rand < 0.45) {
+          type = 'Diamond';
+          const rColor = Math.random();
+          if (rColor < 0.70) variety = 'Natural Diamond (White)';
+          else if (rColor < 0.82) variety = 'Fancy Pink Diamond';
+          else if (rColor < 0.92) variety = 'Fancy Canary Diamond';
+          else variety = 'Fancy Black Diamond';
+        } else if (rand < 0.80) {
+          type = 'Sapphire';
+          const rSap = Math.random();
+          if (rSap < 0.55) variety = 'Royal Blue Sapphire';
+          else if (rSap < 0.85) variety = 'Cornflower Sapphire';
+          else variety = 'Padparadscha Sapphire';
+        } else {
+          type = 'Alexandrite';
+          variety = 'Natural Russian Alexandrite';
+        }
+
+        const shape = this.shapes[Math.floor(Math.random() * this.shapes.length)];
+        const clarity = this.clarities[Math.floor(Math.random() * this.clarities.length)];
+        const color = type === 'Diamond' ? this.diamondColors[Math.floor(Math.random() * this.diamondColors.length)] : 'Vivid';
+        
+        // Carat distribution (0.75ct to 3.85ct)
+        const carat = parseFloat((0.75 + Math.random() * 2.8 + (Math.random() > 0.85 ? 0.9 : 0)).toFixed(3));
+        
+        // Treatments & Phenoms
+        let treatment = 'Untreated';
+        let colorChangePct = 0;
+        let fluorescence = 'None';
+
+        if (type === 'Alexandrite') {
+          colorChangePct = Math.floor(65 + Math.random() * 32); // 65% to 97%
+          treatment = 'Natural Untreated';
+        } else if (type === 'Sapphire') {
+          treatment = Math.random() < 0.35 ? 'Natural Unheated' : 'Standard Heat Treated';
+        } else {
+          const fluoChance = Math.random();
+          if (fluoChance < 0.7) fluorescence = 'None';
+          else if (fluoChance < 0.9) fluorescence = 'Faint Blue';
+          else fluorescence = 'Strong Medium Blue';
+        }
+
+        // Procedural Inclusions (coordinates inside stone)
+        const inclusions = [];
+        let numInclusions = 0;
+        if (clarity === 'VVS1') numInclusions = 1;
+        else if (clarity === 'VVS2') numInclusions = 2;
+        else if (clarity === 'VS1') numInclusions = 4;
+        else if (clarity === 'VS2') numInclusions = 7;
+        else if (clarity === 'SI1') numInclusions = 12;
+        else if (clarity === 'SI2') numInclusions = 18;
+        else if (clarity === 'I1') numInclusions = 26;
+
+        for (let i = 0; i < numInclusions; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 0.72; // inside normalized circle
+          inclusions.push({
+            type: Math.random() < 0.65 ? 'pinpoint' : (Math.random() < 0.5 ? 'feather' : 'crystal'),
+            x: Math.cos(angle) * dist,
+            y: Math.sin(angle) * dist,
+            depth: Math.floor(Math.random() * 100), // focal depth
+            size: 1 + Math.random() * 3.5,
+            angle: Math.random() * Math.PI
+          });
+        }
+
+        // Proportions
+        const tablePct = Math.floor(54 + Math.random() * 9);
+        const depthPct = parseFloat((60 + Math.random() * 3.5).toFixed(1));
+        const cutQuality = depthPct > 60 && depthPct < 62.5 ? 'Ideal' : (depthPct < 64 ? 'Excellent' : 'Very Good');
+
+        // Wholesale Benchmark Calculation (Rapaport-style baseline)
+        let basePerCarat = 2200;
+        if (type === 'Diamond') {
+          if (variety === 'Natural Diamond (White)') {
+            const colorRank = 10 - this.diamondColors.indexOf(color);
+            const clarityRank = 10 - this.clarities.indexOf(clarity);
+            basePerCarat = 1400 + (colorRank * 450) + (clarityRank * 600);
+          } else if (variety === 'Fancy Pink Diamond') basePerCarat = 7800;
+          else if (variety === 'Fancy Canary Diamond') basePerCarat = 4200;
+          else basePerCarat = 1600;
+        } else if (type === 'Sapphire') {
+          basePerCarat = variety === 'Padparadscha Sapphire' ? 5200 : 3400;
+          if (treatment === 'Natural Unheated') basePerCarat *= 1.6;
+        } else if (type === 'Alexandrite') {
+          basePerCarat = 5500 * (colorChangePct / 70);
+        }
+
+        // Exponential weight multiplier (1ct, 2ct, 3ct cliff)
+        const weightMultiplier = Math.pow(carat, 1.35);
+        const wholesaleValue = Math.round((basePerCarat * carat * weightMultiplier) / 50) * 50;
+
+        return {
+          id: 'GEM-' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+          type,
+          variety,
+          shape,
+          carat,
+          color,
+          clarity,
+          cut: cutQuality,
+          tablePct,
+          depthPct,
+          treatment,
+          colorChangePct,
+          fluorescence,
+          inclusions,
+          certified: false,
+          certNumber: null,
+          costBasis: 0,
+          wholesaleValue
+        };
+      }
+    };
+
+    /* =========================================================================
+       CANVAS GEM RENDERING ENGINE
+       ========================================================================= */
+    const GemRenderer = {
+      canvas: null,
+      ctx: null,
+      lightAngle: 45, // degrees
+      focalDepth: 50, // 0 to 100
+      mag: 10,        // 1, 5, 10
+      lightMode: 'daylight', // daylight, warm, uv
+      gem: null,
+      isDragging: false,
+
+      init() {
+        this.canvas = document.getElementById('loupeCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => {
+          this.resize();
+          this.draw();
+        });
+
+        // Mouse & Touch interaction for rotating light vector
+        const container = document.getElementById('canvas-container');
+        const updateLightFromEvent = (e) => {
+          const rect = this.canvas.getBoundingClientRect();
+          const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+          const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+          const x = clientX - (rect.left + rect.width / 2);
+          const y = clientY - (rect.top + rect.height / 2);
+          let deg = Math.atan2(y, x) * (180 / Math.PI);
+          if (deg < 0) deg += 360;
+          this.lightAngle = Math.round(deg);
+          document.getElementById('slider-light').value = this.lightAngle;
+          document.getElementById('lbl-light-angle').textContent = `${this.lightAngle}° Arc`;
+          this.draw();
+        };
+
+        container.addEventListener('mousedown', (e) => {
+          this.isDragging = true;
+          updateLightFromEvent(e);
+          SoundFX.tweezerPing();
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (this.isDragging) updateLightFromEvent(e);
+        });
+        window.addEventListener('mouseup', () => {
+          this.isDragging = false;
+        });
+
+        container.addEventListener('touchstart', (e) => {
+          this.isDragging = true;
+          updateLightFromEvent(e);
+        }, { passive: true });
+        container.addEventListener('touchmove', (e) => {
+          if (this.isDragging) updateLightFromEvent(e);
+        }, { passive: true });
+        container.addEventListener('touchend', () => {
+          this.isDragging = false;
+        });
+      },
+
+      resize() {
+        if (!this.canvas) return;
+        const rect = this.canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        this.ctx.resetTransform?.();
+        this.ctx.scale(dpr, dpr);
+      },
+
+      setGem(gem) {
+        this.gem = gem;
+        this.draw();
+      },
+
+      // Determine palette based on gem variety and active light condition
+      getColors() {
+        const gem = this.gem;
+        if (!gem) return { base: '#2b2b2b', highlight: '#f0ede6', core: '#141414' };
+
+        // Darkfield UV mode checks fluorescence
+        if (this.lightMode === 'uv') {
+          if (gem.fluorescence.includes('Blue')) {
+            return {
+              base: '#1a273b',
+              highlight: '#4a75a0',
+              core: '#0a101d',
+              isFluo: true
+            };
+          }
+          return { base: '#1e1e1e', highlight: '#444444', core: '#0d0d0d', isFluo: false };
+        }
+
+        // Natural Alexandrite Color Shift Engine
+        if (gem.type === 'Alexandrite') {
+          if (this.lightMode === 'daylight') {
+            // Daylight 5500K: Teal / Bluish-Green peacock
+            return { base: '#1b4d44', highlight: '#3dbda7', core: '#0b2622' };
+          } else {
+            // Tungsten 2700K: Rich raspberry / rhodolite purple-red
+            return { base: '#571631', highlight: '#aa3767', core: '#2b0716' };
+          }
+        }
+
+        // Sapphires
+        if (gem.type === 'Sapphire') {
+          if (gem.variety.includes('Royal')) {
+            return { base: '#182b49', highlight: '#3a619b', core: '#0b1626' };
+          } else if (gem.variety.includes('Cornflower')) {
+            return { base: '#274b78', highlight: '#5d8bc7', core: '#12253d' };
+          } else { // Padparadscha
+            return { base: '#703728', highlight: '#d17b64', core: '#3a1910' };
+          }
+        }
+
+        // Diamonds
+        if (gem.variety.includes('Pink')) {
+          return { base: '#5c333f', highlight: '#c48999', core: '#2d141c' };
+        } else if (gem.variety.includes('Canary')) {
+          return { base: '#5c5438', highlight: '#b5a774', core: '#2d2817' };
+        } else if (gem.variety.includes('Black')) {
+          return { base: '#1f1f1f', highlight: '#636363', core: '#0f0f0f' };
+        }
+
+        // White Diamond (Master Color D-J)
+        const colorOffset = gem.color === 'D' ? 245 : (gem.color === 'E' ? 240 : 230);
+        return {
+          base: '#404347',
+          highlight: '#f7f6f2',
+          core: '#1c1e21',
+          sparkle: true
+        };
+      },
+
+      draw() {
+        if (!this.canvas || !this.gem) return;
+        const width = this.canvas.parentElement.clientWidth;
+        const height = this.canvas.parentElement.clientHeight;
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, width, height);
+
+        const cx = width / 2;
+        const cy = height / 2;
+        
+        // Base scale calculation influenced by magnification
+        const magScale = this.mag === 1 ? 0.45 : (this.mag === 5 ? 0.75 : 1.0);
+        const radius = Math.min(width, height) * 0.38 * magScale;
+
+        const colors = this.getColors();
+        const radAngle = (this.lightAngle * Math.PI) / 180;
+
+        // Render Background Loupe Depth Ring
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius * 1.15, 0, Math.PI * 2);
+        ctx.fillStyle = '#0a0a0a';
+        ctx.fill();
+        ctx.strokeStyle = '#262626';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+
+        // DRAW FACET GEOMETRY ACCORDING TO SHAPE
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        switch (this.gem.shape) {
+          case 'Round':
+            this.drawRoundBrilliant(ctx, radius, colors, radAngle);
+            break;
+          case 'Emerald':
+            this.drawEmeraldCut(ctx, radius, colors, radAngle);
+            break;
+          case 'Cushion':
+            this.drawCushionCut(ctx, radius, colors, radAngle);
+            break;
+          case 'Oval':
+            this.drawOvalCut(ctx, radius, colors, radAngle);
+            break;
+          case 'Pear':
+            this.drawPearCut(ctx, radius, colors, radAngle);
+            break;
+          default:
+            this.drawRoundBrilliant(ctx, radius, colors, radAngle);
+        }
+
+        // RENDER INCLUSIONS AT CURRENT FOCAL DEPTH
+        this.drawInclusions(ctx, radius);
+
+        // SAPPHIRE SILK NEEDLE EFFECT (Under Loupe / Darkfield)
+        if (this.gem.type === 'Sapphire' && this.gem.treatment === 'Natural Unheated') {
+          this.drawRutileSilk(ctx, radius);
+        }
+
+        // SCINTILLATION FIRE STARS (Light hits facet vertex)
+        if (colors.sparkle || this.mag >= 5) {
+          this.drawScintillationSpikes(ctx, radius, radAngle);
+        }
+
+        ctx.restore();
+      },
+
+      // 1. ROUND BRILLIANT GEOMETRY
+      drawRoundBrilliant(ctx, r, colors, radAngle) {
+        const segments = 16;
+        const tableR = r * 0.53;
+        const starR = r * 0.74;
+
+        // Girdle Base Contour
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fillStyle = colors.core;
+        ctx.fill();
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Upper & Lower Girdle triangular facets
+        for (let i = 0; i < segments; i++) {
+          const a1 = (i / segments) * Math.PI * 2;
+          const a2 = ((i + 1) / segments) * Math.PI * 2;
+          const midA = (a1 + a2) / 2;
+
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a1) * r, Math.sin(a1) * r);
+          ctx.lineTo(Math.cos(midA) * starR, Math.sin(midA) * starR);
+          ctx.lineTo(Math.cos(a2) * r, Math.sin(a2) * r);
+          ctx.closePath();
+
+          const dot = Math.cos(midA - radAngle);
+          ctx.fillStyle = this.calcFacetShade(colors, dot);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+        }
+
+        // Kite & Star Bezel facets
+        const kiteSegments = 8;
+        for (let i = 0; i < kiteSegments; i++) {
+          const a = (i / kiteSegments) * Math.PI * 2;
+          const nextA = ((i + 1) / kiteSegments) * Math.PI * 2;
+          const midA = (a + nextA) / 2;
+
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(a) * tableR, Math.sin(a) * tableR);
+          ctx.lineTo(Math.cos(midA) * starR, Math.sin(midA) * starR);
+          ctx.lineTo(Math.cos(nextA) * tableR, Math.sin(nextA) * tableR);
+          ctx.closePath();
+
+          const dot = Math.sin(midA - radAngle);
+          ctx.fillStyle = this.calcFacetShade(colors, dot * 0.9);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+          ctx.stroke();
+        }
+
+        // Center Table (Octagon)
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++) {
+          const a = (i / 8) * Math.PI * 2;
+          const x = Math.cos(a) * tableR;
+          const y = Math.sin(a) * tableR;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        const tableDot = Math.cos(radAngle);
+        ctx.fillStyle = this.calcFacetShade(colors, tableDot * 0.4);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      },
+
+      // 2. EMERALD CUT (Step-cut concentric mirrors)
+      drawEmeraldCut(ctx, r, colors, radAngle) {
+        const w = r * 1.35;
+        const h = r * 1.8;
+        const c = r * 0.35; // corner clip
+
+        const drawStepOctagon = (sw, sh, sc, fillDot) => {
+          ctx.beginPath();
+          ctx.moveTo(-sw/2 + sc, -sh/2);
+          ctx.lineTo(sw/2 - sc, -sh/2);
+          ctx.lineTo(sw/2, -sh/2 + sc);
+          ctx.lineTo(sw/2, sh/2 - sc);
+          ctx.lineTo(sw/2 - sc, sh/2);
+          ctx.lineTo(-sw/2 + sc, sh/2);
+          ctx.lineTo(-sw/2, sh/2 - sc);
+          ctx.lineTo(-sw/2, -sh/2 + sc);
+          ctx.closePath();
+          ctx.fillStyle = this.calcFacetShade(colors, fillDot);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        };
+
+        // Outer Tier
+        drawStepOctagon(w, h, c, Math.cos(radAngle));
+        // Mid Tier
+        drawStepOctagon(w * 0.78, h * 0.78, c * 0.78, -Math.cos(radAngle * 1.2));
+        // Table Tier
+        drawStepOctagon(w * 0.52, h * 0.52, c * 0.52, Math.sin(radAngle));
+
+        // Diagonal corner facet lines (Hall of mirrors effect)
+        const corners = [
+          [-w/2, -h/2 + c, -w*0.26, -h*0.26],
+          [w/2, -h/2 + c, w*0.26, -h*0.26],
+          [w/2, h/2 - c, w*0.26, h*0.26],
+          [-w/2, h/2 - c, -w*0.26, h*0.26]
+        ];
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        corners.forEach(([x1, y1, x2, y2]) => {
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        });
+      },
+
+      // 3. CUSHION CUT
+      drawCushionCut(ctx, r, colors, radAngle) {
+        const pillowR = r * 0.95;
+        ctx.beginPath();
+        // Rounded pillow contour
+        ctx.roundRect ? ctx.roundRect(-pillowR, -pillowR, pillowR * 2, pillowR * 2, r * 0.45) : ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fillStyle = colors.core;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.stroke();
+
+        this.drawRoundBrilliant(ctx, r * 0.9, colors, radAngle);
+      },
+
+      // 4. OVAL CUT
+      drawOvalCut(ctx, r, colors, radAngle) {
+        ctx.save();
+        ctx.scale(1.28, 0.92);
+        this.drawRoundBrilliant(ctx, r * 0.85, colors, radAngle);
+        ctx.restore();
+      },
+
+      // 5. PEAR CUT (Teardrop)
+      drawPearCut(ctx, r, colors, radAngle) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, -r * 1.15); // Apex
+        ctx.bezierCurveTo(r * 0.9, -r * 0.5, r * 0.9, r * 0.85, 0, r * 0.95);
+        ctx.bezierCurveTo(-r * 0.9, r * 0.85, -r * 0.9, -r * 0.5, 0, -r * 1.15);
+        ctx.closePath();
+        ctx.fillStyle = colors.core;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.stroke();
+
+        // Inner table & star points
+        this.drawRoundBrilliant(ctx, r * 0.75, colors, radAngle);
+        ctx.restore();
+      },
+
+      // Facet light reflection shade calculator
+      calcFacetShade(colors, dot) {
+        // High contrast optical flash
+        const intensity = (dot + 1) / 2; // 0 to 1
+        if (intensity > 0.82) return colors.highlight;
+        if (intensity < 0.22) return colors.core;
+        return colors.base;
+      },
+
+      // Inclusions (visible under loupe & focal depth match)
+      drawInclusions(ctx, r) {
+        if (!this.gem.inclusions || this.mag === 1) return;
+        const currentFocal = this.focalDepth; // 0 (table) to 100 (culet)
+
+        this.gem.inclusions.forEach(inc => {
+          // Check if inclusion is in focus
+          const depthDelta = Math.abs(inc.depth - currentFocal);
+          if (depthDelta > 28) return; // out of focus blur
+
+          const sharpness = 1 - (depthDelta / 28);
+          const px = inc.x * r;
+          const py = inc.y * r;
+
+          ctx.save();
+          ctx.globalAlpha = sharpness * 0.85;
+
+          if (inc.type === 'pinpoint') {
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(px, py, inc.size * (this.mag / 7), 0, Math.PI * 2);
+            ctx.fill();
+          } else if (inc.type === 'feather') {
+            ctx.strokeStyle = '#f5f5f5';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(px - 4, py - 4);
+            ctx.lineTo(px + 6, py + 4);
+            ctx.lineTo(px + 10, py + 2);
+            ctx.stroke();
+          } else { // crystal
+            ctx.fillStyle = '#1c1c1c';
+            ctx.strokeStyle = '#8c8a84';
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.rect(px - 2, py - 2, 4, 4);
+            ctx.fill();
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        });
+      },
+
+      // Rutile Silk Needles in natural unheated Sapphires
+      drawRutileSilk(ctx, r) {
+        if (this.mag < 5) return;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+        ctx.lineWidth = 0.6;
+        const silkCount = 35;
+        // 60-degree intersecting needle lines
+        for (let i = 0; i < silkCount; i++) {
+          const x = ((i % 7) - 3) * (r * 0.18);
+          const y = (Math.floor(i / 7) - 2.5) * (r * 0.18);
+          ctx.beginPath();
+          ctx.moveTo(x - 12, y - 7);
+          ctx.lineTo(x + 12, y + 7);
+          ctx.stroke();
+        }
+        ctx.restore();
+      },
+
+      // Scintillation Star Spikes
+      drawScintillationSpikes(ctx, r, radAngle) {
+        const sparkCount = 3;
+        for (let i = 0; i < sparkCount; i++) {
+          const a = radAngle + (i * Math.PI * 0.66);
+          const dist = r * 0.68;
+          const sx = Math.cos(a) * dist;
+          const sy = Math.sin(a) * dist;
+
+          ctx.save();
+          ctx.translate(sx, sy);
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(-7, 0); ctx.lineTo(7, 0);
+          ctx.moveTo(0, -7); ctx.lineTo(0, 7);
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(0, 0, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+    };
+
+    /* =========================================================================
+       UI CONTROLLERS & GAMEPLAY LOGIC
+       ========================================================================= */
+    const UI = {
+      init() {
+        // Tab Navigation
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            this.switchTab(tabId);
+            SoundFX.loupeClick();
+          });
+        });
+
+        // Focal slider
+        const focalSlider = document.getElementById('slider-focal');
+        focalSlider.addEventListener('input', (e) => {
+          GemRenderer.focalDepth = parseInt(e.target.value);
+          const label = GemRenderer.focalDepth < 30 ? 'Crown Facets' : (GemRenderer.focalDepth < 70 ? 'Table Plane' : 'Culet & Pavilion');
+          document.getElementById('lbl-focal-depth').textContent = label;
+          GemRenderer.draw();
+        });
+
+        // Light angle slider
+        const lightSlider = document.getElementById('slider-light');
+        lightSlider.addEventListener('input', (e) => {
+          GemRenderer.lightAngle = parseInt(e.target.value);
+          document.getElementById('lbl-light-angle').textContent = `${GemRenderer.lightAngle}° Arc`;
+          GemRenderer.draw();
+        });
+
+        // Light condition buttons
+        document.getElementById('btn-light-daylight').addEventListener('click', () => {
+          this.setLightCondition('daylight');
+        });
+        document.getElementById('btn-light-warm').addEventListener('click', () => {
+          this.setLightCondition('warm');
+        });
+        document.getElementById('btn-light-uv').addEventListener('click', () => {
+          this.setLightCondition('uv');
+        });
+
+        // Magnification buttons
+        document.getElementById('btn-mag-1x').addEventListener('click', () => this.setMag(1));
+        document.getElementById('btn-mag-5x').addEventListener('click', () => this.setMag(5));
+        document.getElementById('btn-mag-10x').addEventListener('click', () => this.setMag(10));
+
+        // Tare Scale Button
+        document.getElementById('btn-tare-scale').addEventListener('click', () => {
+          SoundFX.scaleBeep();
+          const readout = document.getElementById('scale-readout');
+          readout.innerHTML = `0.000 <span class="text-sm font-normal text-boneMuted">ct</span>`;
+          setTimeout(() => {
+            if (Game.activeStone) {
+              readout.innerHTML = `${Game.activeStone.carat.toFixed(3)} <span class="text-sm font-normal text-boneMuted">ct</span>`;
+            }
+          }, 350);
+        });
+
+        // Guild Manual Modal Handlers
+        const manualBackdrop = document.getElementById('manual-modal-backdrop');
+        const openManual = () => {
+          manualBackdrop.classList.remove('hidden');
+          SoundFX.loupeClick();
+        };
+        const closeManual = () => {
+          manualBackdrop.classList.add('hidden');
+          SoundFX.loupeClick();
+        };
+
+        document.getElementById('btn-open-manual').addEventListener('click', openManual);
+        document.getElementById('btn-close-manual').addEventListener('click', closeManual);
+        document.getElementById('btn-manual-got-it').addEventListener('click', closeManual);
+
+        // Escape key closes modal / manual
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            document.getElementById('modal-backdrop').classList.add('hidden');
+            manualBackdrop.classList.add('hidden');
+          }
+        });
+
+        // Manual Navigation Tab Buttons
+        document.querySelectorAll('.manual-nav-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-manual-tab');
+            document.querySelectorAll('.manual-nav-btn').forEach(b => {
+              b.className = 'manual-nav-btn px-3 py-1 rounded bg-soot border border-slateBorder text-boneMuted hover:text-bonePaper whitespace-nowrap';
+            });
+            btn.className = 'manual-nav-btn active px-3 py-1 rounded bg-bonePaper text-soot font-bold whitespace-nowrap';
+
+            document.querySelectorAll('.manual-tab-page').forEach(page => {
+              page.classList.add('hidden');
+            });
+            const activePage = document.getElementById(targetTab);
+            if (activePage) activePage.classList.remove('hidden');
+            SoundFX.loupeClick();
+          });
+        });
+
+        // Sound tweezer tap
+        document.getElementById('btn-quick-tweezer-tap').addEventListener('click', () => {
+          SoundFX.tweezerPing();
+        });
+
+        // Bench to Negotiation
+        document.getElementById('btn-bench-to-negotiate').addEventListener('click', () => {
+          this.switchTab('view-negotiation');
+        });
+
+        // Bench to Vault Deposit (if stone already owned)
+        document.getElementById('btn-bench-to-vault').addEventListener('click', () => {
+          if (!Game.activeStone) return;
+          const isOwned = Game.vault.some(g => g.id === Game.activeStone.id);
+          if (!isOwned) {
+            this.showModal("Stone Not Acquired", "You are inspecting an unpurchased stone from a broker. You must complete the purchase in the Bargaining room first.");
+            return;
+          }
+          this.showModal("Stone Deposited", `${Game.activeStone.variety} (${Game.activeStone.carat} ct) returned safely to parcel tray.`);
+          this.switchTab('view-vault');
+        });
+
+        // New Seller Walk-in
+        document.getElementById('btn-new-seller').addEventListener('click', () => {
+          this.spawnNewSeller();
+          SoundFX.cashStamp();
+        });
+
+        // Bidding Preset percentage buttons
+        document.querySelectorAll('.btn-bid-pct').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!Game.activeSeller) return;
+            const pct = parseFloat(btn.getAttribute('data-pct'));
+            const bidVal = Math.round(Game.activeSeller.askingPrice * pct);
+            document.getElementById('bid-input').value = bidVal;
+          });
+        });
+
+        // Submit Counter Offer
+        document.getElementById('btn-submit-counter').addEventListener('click', () => {
+          this.handleCounterOffer();
+        });
+
+        // Accept Asking Price
+        document.getElementById('btn-accept-asking').addEventListener('click', () => {
+          if (!Game.activeSeller) return;
+          this.executePurchase(Game.activeSeller.askingPrice);
+        });
+
+        // Walk away / decline
+        document.getElementById('btn-walk-away').addEventListener('click', () => {
+          if (!Game.activeSeller) return;
+          this.logNego(`You politely declined ${Game.activeSeller.name}'s offer. Runner departed.`);
+          this.spawnNewSeller();
+        });
+
+        // Inspect Seller Stone on Bench
+        document.getElementById('btn-inspect-seller-stone').addEventListener('click', () => {
+          if (!Game.activeSeller) return;
+          Game.activeStone = Game.activeSeller.stone;
+          this.mountStoneOnBench(Game.activeStone);
+          this.switchTab('view-bench');
+        });
+
+        // End / Advance Day
+        document.getElementById('btn-advance-day').addEventListener('click', () => {
+          this.advanceDay();
+        });
+
+        // Vault Filtering
+        document.querySelectorAll('.vault-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.vault-filter-btn').forEach(b => {
+              b.className = 'vault-filter-btn px-2 py-0.5 rounded bg-soot border border-slateBorder text-boneMuted';
+            });
+            btn.className = 'vault-filter-btn px-2 py-0.5 rounded bg-bonePaper text-soot font-bold';
+            const filter = btn.getAttribute('data-filter');
+            this.renderVaultGrid(filter);
+          });
+        });
+
+        // Vault Services
+        document.getElementById('btn-certify-stone').addEventListener('click', () => {
+          this.certifySelectedStone();
+        });
+        document.getElementById('btn-recut-stone').addEventListener('click', () => {
+          this.recutSelectedStone();
+        });
+        document.getElementById('btn-mount-from-vault').addEventListener('click', () => {
+          if (Game.selectedVaultStone) {
+            Game.activeStone = Game.selectedVaultStone;
+            this.mountStoneOnBench(Game.activeStone);
+            this.switchTab('view-bench');
+          }
+        });
+
+        // Wholesale Liquidation Select
+        const liqSelect = document.getElementById('liquidate-select');
+        liqSelect.addEventListener('change', (e) => {
+          const gemId = e.target.value;
+          const gem = Game.vault.find(g => g.id === gemId);
+          const summary = document.getElementById('liquidation-summary');
+          const btn = document.getElementById('btn-execute-liquidation');
+          if (gem) {
+            const spotPayout = Math.round(gem.wholesaleValue * 0.80);
+            document.getElementById('liq-market-val').textContent = `$${gem.wholesaleValue.toLocaleString()}`;
+            document.getElementById('liq-payout-val').textContent = `$${spotPayout.toLocaleString()}`;
+            summary.classList.remove('hidden');
+            btn.disabled = false;
+            btn.className = 'w-full py-2.5 bg-bonePaper hover:bg-white text-soot rounded font-display font-bold text-xs uppercase tracking-wider transition active:scale-95';
+          } else {
+            summary.classList.add('hidden');
+            btn.disabled = true;
+            btn.className = 'w-full py-2.5 bg-slateDark border border-slateBorder text-boneMuted rounded font-display text-xs uppercase tracking-wider transition disabled:opacity-50';
+          }
+        });
+
+        // Execute Wholesale Liquidation
+        document.getElementById('btn-execute-liquidation').addEventListener('click', () => {
+          const gemId = liqSelect.value;
+          const index = Game.vault.findIndex(g => g.id === gemId);
+          if (index !== -1) {
+            const gem = Game.vault[index];
+            const payout = Math.round(gem.wholesaleValue * 0.80);
+            Game.capital += payout;
+            Game.vault.splice(index, 1);
+            SoundFX.cashStamp();
+            this.addBlotterLog(`LIQUIDATION MEMO`, `Sold ${gem.variety} (${gem.carat} ct) at spot discount.`, payout);
+            this.showModal("Memo Settled", `Liquidated ${gem.variety} to Antwerp sight-holders for $${payout.toLocaleString()} wire transfer.`);
+            this.updateHeaderMetrics();
+            this.renderVaultGrid('ALL');
+            this.refreshLiquidationSelect();
+          }
+        });
+
+        // Modal Close
+        document.getElementById('modal-close').addEventListener('click', () => {
+          document.getElementById('modal-backdrop').classList.add('hidden');
+        });
+      },
+
+      switchTab(tabId) {
+        // Toggle view sections
+        ['view-bench', 'view-negotiation', 'view-vault', 'view-market', 'view-ledger'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.toggle('hidden', id !== tabId);
+        });
+
+        // Highlight active dock icon
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+          const target = btn.getAttribute('data-tab');
+          if (target === tabId) {
+            btn.className = 'nav-tab-btn active p-2 rounded flex flex-col items-center justify-center transition bg-bonePaper text-soot font-bold';
+          } else {
+            btn.className = 'nav-tab-btn p-2 rounded flex flex-col items-center justify-center transition text-boneMuted hover:text-bonePaper hover:bg-slateDark';
+          }
+        });
+
+        // Refresh canvas or sub-views
+        if (tabId === 'view-bench') {
+          setTimeout(() => {
+            GemRenderer.resize();
+            GemRenderer.draw();
+          }, 50);
+        } else if (tabId === 'view-vault') {
+          this.renderVaultGrid('ALL');
+          this.refreshLiquidationSelect();
+        } else if (tabId === 'view-market') {
+          this.renderDockets();
+          this.refreshLiquidationSelect();
+        } else if (tabId === 'view-ledger') {
+          this.renderUpgrades();
+          this.renderBlotter();
+        }
+      },
+
+      setLightCondition(mode) {
+        GemRenderer.lightMode = mode;
+        const btns = {
+          daylight: document.getElementById('btn-light-daylight'),
+          warm: document.getElementById('btn-light-warm'),
+          uv: document.getElementById('btn-light-uv')
+        };
+        Object.keys(btns).forEach(k => {
+          if (k === mode) btns[k].className = 'px-2 py-0.5 rounded bg-bonePaper text-soot font-bold';
+          else btns[k].className = 'px-2 py-0.5 rounded text-boneMuted hover:text-bonePaper';
+        });
+
+        // Trigger dynamic color change note for Alexandrite or Sapphires
+        if (Game.activeStone) {
+          if (Game.activeStone.type === 'Alexandrite') {
+            const shiftLabel = mode === 'daylight' ? 'Teal / Blue-Green Peacock' : (mode === 'warm' ? 'Raspberry / Rhodolite Purple' : 'Inert Darkfield');
+            document.getElementById('gem-phenom-title').textContent = `${Game.activeStone.colorChangePct}% Shift (${shiftLabel})`;
+          }
+        }
+        GemRenderer.draw();
+        SoundFX.loupeClick();
+      },
+
+      setMag(mag) {
+        GemRenderer.mag = mag;
+        const btns = {
+          1: document.getElementById('btn-mag-1x'),
+          5: document.getElementById('btn-mag-5x'),
+          10: document.getElementById('btn-mag-10x')
+        };
+        [1, 5, 10].forEach(m => {
+          if (m === mag) btns[m].className = 'px-1.5 py-0.5 rounded bg-bonePaper text-soot font-bold';
+          else btns[m].className = 'px-1.5 py-0.5 rounded text-boneMuted hover:text-bonePaper';
+        });
+        GemRenderer.draw();
+        SoundFX.loupeClick();
+      },
+
+      mountStoneOnBench(gem) {
+        if (!gem) return;
+        GemRenderer.setGem(gem);
+
+        // Header tag
+        document.getElementById('bench-gem-tag').textContent = `${gem.shape} ${gem.variety} • ${gem.carat} ct`;
+
+        // Micro-scale
+        document.getElementById('scale-readout').innerHTML = `${gem.carat.toFixed(3)} <span class="text-sm font-normal text-boneMuted">ct</span>`;
+        document.getElementById('val-weight-mg').textContent = `${(gem.carat * 200).toFixed(1)} mg`;
+        document.getElementById('val-sg').textContent = gem.type === 'Diamond' ? '3.52 g/cm³' : (gem.type === 'Sapphire' ? '4.00 g/cm³' : '3.73 g/cm³');
+
+        // 4 C's Breakdown Cards
+        document.getElementById('gem-variety').textContent = gem.variety;
+        document.getElementById('gem-shape').textContent = `${gem.shape} Cut`;
+        document.getElementById('gem-cut-grade').textContent = `${gem.cut} (Table ${gem.tablePct}% • Depth ${gem.depthPct}%)`;
+        document.getElementById('gem-color-code').textContent = gem.color;
+        document.getElementById('gem-clarity').textContent = `${gem.clarity} (${gem.inclusions.length} inclusions mapped)`;
+
+        // Inclusions description
+        let desc = 'Flawless crystalline matrix with zero visible pinpoints.';
+        if (gem.clarity.includes('VVS')) desc = 'Minute pinpoints visible under 10× darkfield illumination. Pavilion eye-clean.';
+        else if (gem.clarity.includes('VS')) desc = 'Minor feathers and crystals located off-table. Completely eye-clean to naked eye.';
+        else if (gem.clarity.includes('SI')) desc = 'Noticeable inclusions near girdle. Loupe shows distinct crystalline feathers.';
+        else if (gem.clarity === 'I1') desc = 'Prominent cleavage fissure through pavilion. Structurally delicate.';
+        document.getElementById('gem-clarity-desc').textContent = desc;
+
+        // Optical Phenom Box
+        if (gem.type === 'Alexandrite') {
+          document.getElementById('gem-phenom-title').textContent = `${gem.colorChangePct}% Alexandrite Shift`;
+          document.getElementById('gem-phenom-desc').textContent = 'Strong pleochroism: Switch between 5500K daylight and 2700K incandescent lamp to inspect color transformation.';
+        } else if (gem.type === 'Sapphire') {
+          const silkNote = gem.treatment === 'Natural Unheated' ? 'Natural Unheated Rutile Silk needles observed at 60°' : 'Heat treated / dissolved silk';
+          document.getElementById('gem-phenom-title').textContent = gem.treatment;
+          document.getElementById('gem-phenom-desc').textContent = silkNote;
+        } else {
+          document.getElementById('gem-phenom-title').textContent = `Fluorescence: ${gem.fluorescence}`;
+          document.getElementById('gem-phenom-desc').textContent = 'Stone exhibits high dispersion fire and standard carbon diamond lattice refraction.';
+        }
+
+        // Benchmark Price
+        document.getElementById('gem-benchmark-price').textContent = `$${gem.wholesaleValue.toLocaleString()}`;
+        document.getElementById('gem-cert-badge').textContent = gem.certified ? `CERTIFIED (${gem.certNumber})` : 'UNCERTIFIED ROUGH';
+      },
+
+      spawnNewSeller() {
+        const archetype = RUNNER_ARCHETYPES[Math.floor(Math.random() * RUNNER_ARCHETYPES.length)];
+        const stone = GemFactory.createRandomGem();
+        
+        // Seller asking price is 110% to 135% of wholesale baseline
+        const askPrice = Math.round((stone.wholesaleValue * (1.10 + Math.random() * 0.25)) / 100) * 100;
+        // Floor price seller won't go below (around 82% to 92% of wholesale)
+        const floorPrice = Math.round((stone.wholesaleValue * (0.82 + Math.random() * 0.10)) / 100) * 100;
+
+        Game.activeSeller = {
+          ...archetype,
+          stone,
+          askingPrice: askPrice,
+          floorPrice,
+          patience: 100
+        };
+
+        // If no active stone on loupe, mount this one
+        if (!Game.activeStone) {
+          Game.activeStone = stone;
+          this.mountStoneOnBench(stone);
+        }
+
+        // Update Negotiation UI
+        document.getElementById('seller-avatar').textContent = archetype.avatar;
+        document.getElementById('seller-name').textContent = archetype.name;
+        document.getElementById('seller-title').textContent = archetype.title;
+        document.getElementById('seller-speech').textContent = `"${archetype.dialogues.intro}"`;
+        document.getElementById('seller-patience-val').textContent = '100%';
+        document.getElementById('seller-patience-bar').style.width = '100%';
+        document.getElementById('seller-ask-price').textContent = `$${askPrice.toLocaleString()}`;
+
+        document.getElementById('nego-gem-title').textContent = `${stone.variety} (${stone.carat} ct)`;
+        document.getElementById('nego-gem-clarity').textContent = stone.clarity;
+        document.getElementById('nego-gem-cut').textContent = `${stone.shape} (${stone.cut})`;
+        document.getElementById('nego-gem-rap').textContent = `$${stone.wholesaleValue.toLocaleString()}`;
+
+        document.getElementById('bid-input').value = Math.round(askPrice * 0.75);
+
+        // Clear log
+        const logBox = document.getElementById('nego-log-box');
+        logBox.innerHTML = `<div class="text-boneMuted text-[11px]">[Day ${Game.day}] ${archetype.name} arrives offering ${stone.variety} (${stone.carat} ct).</div>`;
+      },
+
+      logNego(msg) {
+        const logBox = document.getElementById('nego-log-box');
+        const line = document.createElement('div');
+        line.className = 'text-boneLight text-[11px] border-b border-slateBorder/40 pb-0.5';
+        line.textContent = msg;
+        logBox.appendChild(line);
+        logBox.scrollTop = logBox.scrollHeight;
+      },
+
+      handleCounterOffer() {
+        const seller = Game.activeSeller;
+        if (!seller) return;
+
+        const bidVal = parseInt(document.getElementById('bid-input').value) || 0;
+        if (bidVal <= 0) return;
+
+        // Check if player even has enough capital
+        if (bidVal > Game.capital) {
+          this.showModal("Insufficient Liquidity", `You only have $${Game.capital.toLocaleString()} in liquid capital. Adjust your counter offer or liquidate vault assets.`);
+          return;
+        }
+
+        // Insultingly low offer (< 50% of floor)
+        if (bidVal < seller.floorPrice * 0.55) {
+          seller.patience -= 40;
+          this.logNego(`You offered $${bidVal.toLocaleString()}. ${seller.name}: "${seller.dialogues.counterLow}"`);
+        } else if (bidVal < seller.floorPrice) {
+          // Fair attempt, but below floor
+          seller.patience -= 20;
+          // Seller adjusts asking price down towards floor
+          const concessions = Math.round((seller.askingPrice - seller.floorPrice) * 0.4);
+          seller.askingPrice -= concessions;
+          document.getElementById('seller-ask-price').textContent = `$${seller.askingPrice.toLocaleString()}`;
+          this.logNego(`You offered $${bidVal.toLocaleString()}. ${seller.name}: "${seller.dialogues.counterFair}" [Reduced ask to $${seller.askingPrice.toLocaleString()}]`);
+        } else {
+          // Offer >= floor! Deal accepted
+          this.logNego(`You offered $${bidVal.toLocaleString()}. ${seller.name}: "${seller.dialogues.accept}"`);
+          this.executePurchase(bidVal);
+          return;
+        }
+
+        // Update patience meter
+        if (seller.patience <= 0) {
+          seller.patience = 0;
+          document.getElementById('seller-patience-val').textContent = '0%';
+          document.getElementById('seller-patience-bar').style.width = '0%';
+          this.logNego(`${seller.name}: "${seller.dialogues.walkout}" [Runner packed up and left]`);
+          setTimeout(() => {
+            this.spawnNewSeller();
+          }, 1800);
+        } else {
+          document.getElementById('seller-patience-val').textContent = `${seller.patience}%`;
+          document.getElementById('seller-patience-bar').style.width = `${seller.patience}%`;
+        }
+      },
+
+      executePurchase(amount) {
+        if (!Game.activeSeller) return;
+        if (amount > Game.capital) {
+          this.showModal("Insufficient Liquidity", `You require $${amount.toLocaleString()} to execute this transaction.`);
+          return;
+        }
+
+        const stone = Game.activeSeller.stone;
+        stone.costBasis = amount;
+        Game.capital -= amount;
+        Game.reputation += 15;
+        Game.vault.push(stone);
+
+        SoundFX.cashStamp();
+        this.addBlotterLog(`ACQUISITION`, `Purchased ${stone.variety} (${stone.carat} ct) from ${Game.activeSeller.name}.`, -amount);
+        this.showModal("Parcel Secured", `You purchased ${stone.variety} (${stone.carat} ct) for $${amount.toLocaleString()}. Transferred to Vault parcel tray.`);
+
+        this.updateHeaderMetrics();
+        this.renderVaultGrid('ALL');
+        this.spawnNewSeller();
+      },
+
+      renderVaultGrid(filter = 'ALL') {
+        const grid = document.getElementById('vault-grid');
+        grid.innerHTML = '';
+
+        let filtered = Game.vault;
+        if (filter === 'DIAMOND') filtered = filtered.filter(g => g.type === 'Diamond');
+        else if (filter === 'SAPPHIRE') filtered = filtered.filter(g => g.type === 'Sapphire');
+        else if (filter === 'ALEXANDRITE') filtered = filtered.filter(g => g.type === 'Alexandrite');
+
+        document.getElementById('vault-count-all').textContent = Game.vault.length;
+        document.getElementById('badge-vault-count').textContent = Game.vault.length;
+
+        let totalValue = Game.vault.reduce((acc, g) => acc + g.wholesaleValue, 0);
+        document.getElementById('vault-total-equity').textContent = `Vault Equity: $${totalValue.toLocaleString()}`;
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div class="col-span-2 text-center py-10 font-mono text-xs text-boneMuted">Tray empty in this classification.</div>`;
+          return;
+        }
+
+        filtered.forEach(gem => {
+          const card = document.createElement('div');
+          const isSelected = Game.selectedVaultStone && Game.selectedVaultStone.id === gem.id;
+          card.className = `p-3 rounded border text-xs font-mono cursor-pointer transition ${isSelected ? 'bg-slateDark border-boneLight' : 'bg-soot border-slateBorder hover:border-boneMuted'}`;
+          
+          card.innerHTML = `
+            <div class="flex justify-between items-start mb-1">
+              <span class="font-bold text-bonePaper text-[11px] truncate">${gem.variety}</span>
+              <span class="text-boneMuted text-[10px]">${gem.carat} ct</span>
+            </div>
+            <div class="flex justify-between text-[10px] text-boneMuted">
+              <span>${gem.shape} • ${gem.clarity}</span>
+              <span class="text-boneLight font-bold">$${gem.wholesaleValue.toLocaleString()}</span>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[9px] pt-1.5 border-t border-slateBorder/60">
+              <span class="${gem.certified ? 'text-boneLight' : 'text-boneMuted'}">${gem.certified ? '✓ GIA Cert' : 'Rough Memo'}</span>
+              <span class="text-boneMuted">Cost: $${gem.costBasis ? gem.costBasis.toLocaleString() : 'N/A'}</span>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            Game.selectedVaultStone = gem;
+            this.renderVaultGrid(filter);
+            this.showVaultDetail(gem);
+            SoundFX.loupeClick();
+          });
+
+          grid.appendChild(card);
+        });
+      },
+
+      showVaultDetail(gem) {
+        document.getElementById('vault-detail-empty').classList.add('hidden');
+        const content = document.getElementById('vault-detail-content');
+        content.classList.remove('hidden');
+
+        document.getElementById('vdet-type').textContent = gem.type.toUpperCase();
+        document.getElementById('vdet-title').textContent = `${gem.carat} ct ${gem.shape} ${gem.variety}`;
+        document.getElementById('vdet-cert-pill').textContent = gem.certified ? `Certified: ${gem.certNumber}` : 'Uncertified';
+        document.getElementById('vdet-treatment-pill').textContent = gem.treatment;
+
+        document.getElementById('vdet-weight').textContent = `${gem.carat} ct (${(gem.carat * 200).toFixed(1)} mg)`;
+        document.getElementById('vdet-color').textContent = gem.color;
+        document.getElementById('vdet-clarity').textContent = gem.clarity;
+        document.getElementById('vdet-cut').textContent = `${gem.cut} (Table ${gem.tablePct}%)`;
+        document.getElementById('vdet-cost').textContent = `$${gem.costBasis.toLocaleString()}`;
+        document.getElementById('vdet-est-value').textContent = `$${gem.wholesaleValue.toLocaleString()}`;
+
+        // Disable certify button if already certified
+        const btnCert = document.getElementById('btn-certify-stone');
+        if (gem.certified) {
+          btnCert.disabled = true;
+          btnCert.textContent = 'Certified ✓';
+          btnCert.className = 'px-2.5 py-1 bg-soot border border-slateBorder text-xs font-mono text-boneMuted rounded cursor-not-allowed';
+        } else {
+          btnCert.disabled = false;
+          btnCert.textContent = 'Submit ($400)';
+          btnCert.className = 'px-2.5 py-1 bg-charcoal hover:bg-slateDark border border-slateBorder text-xs font-mono text-boneLight rounded';
+        }
+      },
+
+      certifySelectedStone() {
+        const gem = Game.selectedVaultStone;
+        if (!gem || gem.certified) return;
+        if (Game.capital < 400) {
+          this.showModal("Insufficient Funds", "Lab grading docket requires $400 liquidity.");
+          return;
+        }
+
+        Game.capital -= 400;
+        gem.certified = true;
+        gem.certNumber = 'GIA-' + Math.floor(10000000 + Math.random() * 90000000);
+        // Certification unlocks a 30% resale markup!
+        gem.wholesaleValue = Math.round(gem.wholesaleValue * 1.30);
+
+        SoundFX.cashStamp();
+        this.addBlotterLog(`CERTIFICATION`, `Dispatched ${gem.variety} (${gem.carat} ct) to Gemological Institute.`, -400);
+        this.showModal("Certificate Issued", `Official dossier ${gem.certNumber} generated. Guaranteed specs increase wholesale value to $${gem.wholesaleValue.toLocaleString()}!`);
+        
+        this.updateHeaderMetrics();
+        this.showVaultDetail(gem);
+        this.renderVaultGrid('ALL');
+      },
+
+      recutSelectedStone() {
+        const gem = Game.selectedVaultStone;
+        if (!gem) return;
+        if (Game.capital < 650) {
+          this.showModal("Insufficient Funds", "Lapidary wheel master commission requires $650.");
+          return;
+        }
+
+        // Lapidary re-cutting cuts out inclusions at expense of carat weight
+        const caratLoss = parseFloat((gem.carat * (0.12 + Math.random() * 0.08)).toFixed(3));
+        const newCarat = parseFloat((gem.carat - caratLoss).toFixed(3));
+
+        // Jump clarity
+        const clarityOrder = ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'FL'];
+        const curIdx = clarityOrder.indexOf(gem.clarity);
+        let newClarity = gem.clarity;
+        if (curIdx < clarityOrder.length - 1) {
+          newClarity = clarityOrder[curIdx + 1];
+        }
+
+        SoundFX.grindLapidary();
+        Game.capital -= 650;
+        gem.carat = newCarat;
+        gem.clarity = newClarity;
+        gem.cut = 'Ideal';
+        // Reduce internal inclusions array
+        gem.inclusions = gem.inclusions.slice(0, Math.floor(gem.inclusions.length * 0.4));
+
+        // Recalculate wholesale benchmark
+        gem.wholesaleValue = Math.round(gem.wholesaleValue * 1.18);
+
+        this.addBlotterLog(`LAPIDARY RECUT`, `Excised fissures from ${gem.variety}. Yield: ${newCarat} ct (${newClarity}).`, -650);
+        this.showModal("Lapidary Yield Success", `Stone re-cut complete! Trimmed ${caratLoss} ct to eliminate severe inclusions. Clarity upgraded to ${newClarity}! New value: $${gem.wholesaleValue.toLocaleString()}`);
+
+        this.updateHeaderMetrics();
+        this.showVaultDetail(gem);
+        this.renderVaultGrid('ALL');
+        if (Game.activeStone && Game.activeStone.id === gem.id) {
+          this.mountStoneOnBench(gem);
+        }
+      },
+
+      renderDockets() {
+        const container = document.getElementById('dockets-container');
+        container.innerHTML = '';
+
+        Game.dockets.forEach(docket => {
+          // Check if player has any matching stone in vault
+          const match = Game.vault.find(gem => docket.check(gem));
+
+          const card = document.createElement('div');
+          card.className = 'bg-charcoal p-3.5 rounded-lg border border-slateBorder flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs';
+          
+          card.innerHTML = `
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-bonePaper">${docket.client}</span>
+                <span class="text-[9px] font-mono px-1.5 py-0.2 bg-soot text-boneLight rounded border border-slateBorder">Bespoke Docket</span>
+              </div>
+              <p class="font-serif italic text-boneMuted text-[11px]">${docket.requirement}</p>
+            </div>
+            <div class="flex items-center gap-3 self-end md:self-auto">
+              <div class="text-right font-mono">
+                <span class="text-[9px] uppercase text-boneMuted block">Payout</span>
+                <span class="font-bold text-bonePaper text-sm">$${docket.reward.toLocaleString()}</span>
+              </div>
+              <button class="btn-fulfill-docket px-3 py-1.5 rounded font-display font-bold text-xs uppercase tracking-wider transition ${match ? 'bg-bonePaper hover:bg-white text-soot shadow' : 'bg-soot border border-slateBorder text-boneMuted cursor-not-allowed'}" ${match ? '' : 'disabled'}>
+                ${match ? 'Fulfill Docket' : 'No Stone'}
+              </button>
+            </div>
+          `;
+
+          if (match) {
+            card.querySelector('.btn-fulfill-docket').addEventListener('click', () => {
+              this.fulfillDocket(docket, match);
+            });
+          }
+
+          container.appendChild(card);
+        });
+      },
+
+      fulfillDocket(docket, gem) {
+        const index = Game.vault.findIndex(g => g.id === gem.id);
+        if (index === -1) return;
+
+        Game.vault.splice(index, 1);
+        Game.capital += docket.reward;
+        Game.reputation += 40;
+
+        SoundFX.cashStamp();
+        this.addBlotterLog(`B2B COMMISSION`, `Delivered ${gem.variety} (${gem.carat} ct) to ${docket.client}.`, docket.reward);
+        this.showModal("Docket Executed", `Delivered ${gem.variety} to ${docket.client}. Received wire payout of $${docket.reward.toLocaleString()} and +40 Exchange Prestige!`);
+
+        // Replace docket
+        const docIndex = Game.dockets.findIndex(d => d.id === docket.id);
+        if (docIndex !== -1) {
+          Game.dockets.splice(docIndex, 1);
+        }
+
+        this.updateHeaderMetrics();
+        this.renderDockets();
+        this.renderVaultGrid('ALL');
+      },
+
+      refreshLiquidationSelect() {
+        const select = document.getElementById('liquidate-select');
+        select.innerHTML = '<option value="">-- Choose Parcel to Liquidate --</option>';
+        Game.vault.forEach(gem => {
+          const opt = document.createElement('option');
+          opt.value = gem.id;
+          opt.textContent = `${gem.variety} (${gem.carat} ct, ${gem.clarity}) - Rap: $${gem.wholesaleValue.toLocaleString()}`;
+          select.appendChild(opt);
+        });
+      },
+
+      renderUpgrades() {
+        const list = document.getElementById('upgrades-list');
+        list.innerHTML = '';
+
+        Game.upgrades.forEach(upg => {
+          const card = document.createElement('div');
+          card.className = 'bg-soot p-3 rounded border border-slateBorder flex items-center justify-between gap-3 text-xs';
+          
+          card.innerHTML = `
+            <div class="space-y-0.5">
+              <div class="font-display font-bold text-bonePaper">${upg.name}</div>
+              <p class="font-serif italic text-boneMuted text-[11px] leading-snug">${upg.desc}</p>
+            </div>
+            <div class="text-right font-mono flex-shrink-0">
+              ${upg.purchased ? 
+                `<span class="px-2 py-1 bg-charcoal text-boneLight rounded border border-slateBorder text-[10px]">Active in Studio</span>` :
+                `<button class="btn-buy-upgrade px-3 py-1.5 bg-bonePaper hover:bg-white text-soot font-bold rounded text-xs transition">
+                  Buy $${upg.cost.toLocaleString()}
+                </button>`
+              }
+            </div>
+          `;
+
+          if (!upg.purchased) {
+            card.querySelector('.btn-buy-upgrade').addEventListener('click', () => {
+              if (Game.capital < upg.cost) {
+                this.showModal("Insufficient Capital", `Acquiring ${upg.name} requires $${upg.cost.toLocaleString()}.`);
+                return;
+              }
+              Game.capital -= upg.cost;
+              upg.purchased = true;
+              SoundFX.cashStamp();
+              this.addBlotterLog(`EQUIPMENT UPGRADE`, `Commissioned ${upg.name}.`, -upg.cost);
+              this.showModal("Apparatus Installed", `${upg.name} has been calibrated and installed on your inspection bench.`);
+              this.updateHeaderMetrics();
+              this.renderUpgrades();
+            });
+          }
+
+          list.appendChild(card);
+        });
+      },
+
+      renderBlotter() {
+        const box = document.getElementById('ledger-history-box');
+        box.innerHTML = '';
+        if (Game.logs.length === 0) {
+          box.innerHTML = `<div class="text-boneMuted text-[11px] py-6 text-center italic">No transactions recorded in blotter yet.</div>`;
+          return;
+        }
+
+        Game.logs.slice().reverse().forEach(log => {
+          const row = document.createElement('div');
+          row.className = 'p-2 rounded bg-soot border border-slateBorder/60 flex justify-between items-center text-[11px]';
+          const isPos = log.delta >= 0;
+          row.innerHTML = `
+            <div>
+              <div class="font-bold text-bonePaper">${log.type} <span class="text-[9px] text-boneMuted font-normal">[Day ${log.day}]</span></div>
+              <div class="text-boneMuted text-[10px]">${log.desc}</div>
+            </div>
+            <div class="font-mono font-bold ${isPos ? 'text-boneLight' : 'text-boneMuted'}">
+              ${isPos ? '+' : ''}$${Math.abs(log.delta).toLocaleString()}
+            </div>
+          `;
+          box.appendChild(row);
+        });
+      },
+
+      addBlotterLog(type, desc, delta) {
+        Game.logs.push({
+          day: Game.day,
+          type,
+          desc,
+          delta
+        });
+        Game.save();
+      },
+
+      advanceDay() {
+        Game.day += 1;
+        // Minor daily vault insurance fee ($50)
+        Game.capital -= 50;
+        SoundFX.cashStamp();
+
+        // Refresh market dockets
+        if (Game.dockets.length < 3) {
+          const fresh = DEFAULT_DOCKETS[Math.floor(Math.random() * DEFAULT_DOCKETS.length)];
+          Game.dockets.push({ ...fresh, id: 'doc_' + Math.random().toString(36).substr(2, 5) });
+        }
+
+        // Spawn new runner
+        this.spawnNewSeller();
+        this.addBlotterLog(`DAILY RECONCILIATION`, `Vault security & insurance fee deducted.`, -50);
+        this.showModal("Day Concluded", `Exchange closed for Day ${Game.day - 1}. Antwerp morning sight opens with fresh parcels and overseas brokers.`);
+        
+        this.updateHeaderMetrics();
+        this.renderDockets();
+        Game.save();
+      },
+
+      updateHeaderMetrics() {
+        document.getElementById('header-capital').textContent = `$${Game.capital.toLocaleString()}`;
+        document.getElementById('header-day').textContent = `D.${Game.day}`;
+        const tier = Game.reputation < 200 ? 'Tier I' : (Game.reputation < 400 ? 'Tier II' : 'Master Sight-Holder');
+        document.getElementById('header-reputation').textContent = `${tier} (${Game.reputation} pts)`;
+        document.getElementById('badge-vault-count').textContent = Game.vault.length;
+        Game.save();
+      },
+
+      showModal(title, msg) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-message').textContent = msg;
+        document.getElementById('modal-backdrop').classList.remove('hidden');
+      }
+    };
+
+    /* =========================================================================
+       APPLICATION INITIALIZATION
+       ========================================================================= */
+    window.onload = function() {
+      Game.load();
+      GemRenderer.init();
+      UI.init();
+
+      // Initialize default walk-in seller & stone
+      UI.spawnNewSeller();
+      UI.mountStoneOnBench(Game.activeSeller.stone);
+      UI.updateHeaderMetrics();
+    };
+  </script>
+</body>
+</html>
